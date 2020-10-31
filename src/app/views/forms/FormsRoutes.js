@@ -1,22 +1,28 @@
-import { MatxLoadable } from "matx";
+// import { MatxLoadable } from 'matx';
 
-const BasicForm = MatxLoadable({
-  loader: () => import("./BasicForm")
-});
+// const CustomerList = MatxLoadable({
+// 	loader: () => import('./CustomerList'),
+// });
+// const NewCustomer = MatxLoadable({
+// 	loader: () => import('./NewCustomer'),
+// });
+// const ViewCustomer = MatxLoadable({
+// 	loader: () => import('./ViewCustomer'),
+// });
 
-const EditorForm = MatxLoadable({
-  loader: () => import("./EditorForm")
-});
+// const formsRoutes = [
+// 	{
+// 		path: '/customer/new-customer',
+// 		component: NewCustomer,
+// 	},
+// 	{
+// 		path: '/customer/customer-list',
+// 		component: CustomerList,
+// 	},
+// 	{
+// 		path: '/customer/view-customer',
+// 		component: ViewCustomer,
+// 	},
+// ];
 
-const formsRoutes = [
-  {
-    path: "/forms/basic",
-    component: BasicForm
-  },
-  {
-    path: "/forms/editor",
-    component: EditorForm
-  }
-];
-
-export default formsRoutes;
+// export default formsRoutes;

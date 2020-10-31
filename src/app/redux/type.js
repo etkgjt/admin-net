@@ -1,0 +1,9 @@
+export const REDUX = {
+	UPDATE_PRODUCTS: 'UPDATE_PRODUCTS',
+	CLEAR_DATA: 'CLEAR_DATA',
+	// User reducer
+	LOGIN: 'LOGIN',
+	LOGOUT: 'LOGOUT',
+	//CustomerReducer
+	UPDATE_CUSTOMER_LIST: 'UPDATE_CUSTOMER_LIST',
+};

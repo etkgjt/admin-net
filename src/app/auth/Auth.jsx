@@ -1,74 +1,86 @@
-import React, { Component, Fragment } from "react";
-import { connect } from "react-redux";
-import { PropTypes } from "prop-types";
-import { setUserData } from "../redux/actions/UserActions";
-import jwtAuthService from "../services/jwtAuthService";
-import localStorageService from "../services/localStorageService";
-import firebaseAuthService from "../services/firebase/firebaseAuthService";
-import history from "history.js";
+import React, { Component, Fragment, useState, useEffect } from 'react';
+import { connect } from 'react-redux';
+import { PropTypes } from 'prop-types';
+import { setUserData } from '../redux/actions/UserActions';
+import jwtAuthService from '../services/jwtAuthService';
+import localStorageService from '../services/localStorageService';
+import firebaseAuthService from '../services/firebase/firebaseAuthService';
+import history from 'history.js';
+import { useHistory } from 'react-router-dom';
 
 class Auth extends Component {
-  state = {};
-  
-  constructor(props) {
-    super(props);
+	state = {};
 
-    // Set user if exists in local storage
-    // This is only for demo purpose
-    // You should remove this
-    this.props.setUserData(localStorageService.getItem("auth_user"));
-    
-    // Check current token is valid on page load/reload
-    this.checkJwtAuth();
+	constructor(props) {
+		super(props);
 
-    // this.checkFirebaseAuth();
-  }
+		// Set user if exists in local storage
+		// This is only for demo purpose
+		// You should remove this
+		// this.props.setUserData(localStorageService.getItem("auth_user"));
 
-  checkJwtAuth = () => {
-    // You need to send token to your server to check token is valid
-    // modify loginWithToken method in jwtService
-    jwtAuthService.loginWithToken().then(user => {
+		// Check current token is valid on page load/reload
+		this.checkJwtAuth();
 
-      // Valid token
-      // Set user
-      this.props.setUserData(user);
+		// this.checkFirebaseAuth();
+	}
 
-      // You should redirect user to Dashboard here
-      
-    }).catch(err => {
-      // Invalid token
-      // Ridirect user to sign in page here
-      console.log(err);
-      history.push({
-        pathname: "/session/signin"
-      });
-    });
-  };
+	checkJwtAuth = () => {
+		// You need to send token to your server to check token is valid
+		// modify loginWithToken method in jwtService
+		// jwtAuthService
+		// 	.loginWithToken()
+		// 	.then((user) => {
+		// 		// Valid token
+		// 		// Set user
+		// 		this.props.setUserData(user);
 
-  checkFirebaseAuth = () => {
-    firebaseAuthService.checkAuthStatus(user => {
-      if (user) {
-        console.log(user.uid);
-        console.log(user.email);
-        console.log(user.emailVerified);
-      } else {
-        console.log("not logged in");
-      }
-    });
-  };
+		// 		// You should redirect user to Dashboard here
+		// 	})
+		// 	.catch((err) => {
+		// Invalid token
+		// Ridirect user to sign in page here
+		//console.log(err);
+		console.log('auth props', this.props);
+		if (!this.props.login.success)
+			history.push({
+				pathname: '/session/signin',
+			});
+		//});
+	};
 
-  render() {
-    const { children } = this.props;
-    return <Fragment>{children}</Fragment>;
-  }
+	checkFirebaseAuth = () => {
+		firebaseAuthService.checkAuthStatus((user) => {
+			if (user) {
+				console.log(user.uid);
+				console.log(user.email);
+				console.log(user.emailVerified);
+			} else {
+				console.log('not logged in');
+			}
+		});
+	};
+
+	render() {
+		const { children } = this.props;
+		return <Fragment>{children}</Fragment>;
+	}
 }
 
-const mapStateToProps = state => ({
-  setUserData: PropTypes.func.isRequired,
-  login: state.login
+const mapStateToProps = (state) => ({
+	setUserData: PropTypes.func.isRequired,
+	login: state.login,
 });
 
-export default connect(
-  mapStateToProps,
-  { setUserData }
-)(Auth);
+export default connect(mapStateToProps, { setUserData })(Auth);
+// const Auth = ({ children }) => {
+// 	const [loggedIn, setLoggedIn] = useState(false);
+// 	const history = useHistory();
+// 	useEffect(() => {
+// 		if (!loggedIn && history) {
+// 			history.push('/session/signin');
+// 		}
+// 	}, [loggedIn]);
+// 	return <Fragment>{children}</Fragment>;
+// };
+// export default Auth;

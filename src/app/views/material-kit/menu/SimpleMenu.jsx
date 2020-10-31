@@ -1,41 +1,49 @@
-import React from "react";
-import Button from "@material-ui/core/Button";
-import Menu from "@material-ui/core/Menu";
-import MenuItem from "@material-ui/core/MenuItem";
+import React from 'react';
+import Button from '@material-ui/core/Button';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
-function SimpleMenu() {
-  const [anchorEl, setAnchorEl] = React.useState(null);
+function SimpleMenu({ items, onSelected = () => {} }) {
+	const [anchorEl, setAnchorEl] = React.useState(null);
+	const [data, setData] = React.useState(items ? items : []);
+	const [isShow, setShow] = React.useState(false);
+	function handleClick(event) {
+		setShow(true);
+	}
 
-  function handleClick(event) {
-    setAnchorEl(event.currentTarget);
-  }
+	function handleClose(v) {
+		setShow(() => {
+			v ?? onSelected(v);
+			return false;
+		});
+	}
 
-  function handleClose() {
-    setAnchorEl(null);
-  }
-
-  return (
-    <div>
-      <Button
-        variant="outlined"
-        aria-owns={anchorEl ? "simple-menu" : undefined}
-        aria-haspopup="true"
-        onClick={handleClick}
-      >
-        Open Menu
-      </Button>
-      <Menu
-        id="simple-menu"
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>My account</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
-      </Menu>
-    </div>
-  );
+	return (
+		<div>
+			<Button
+				variant="outlined"
+				aria-owns={anchorEl ? 'simple-menu' : undefined}
+				aria-haspopup="true"
+				onClick={handleClick}
+			>
+				Open Menu
+			</Button>
+			<Menu
+				id="simple-menu"
+				anchorEl={anchorEl}
+				open={isShow}
+				onClose={handleClose}
+			>
+				{data && data.length
+					? data.map((v, i) => (
+							<MenuItem onClick={() => handleClose(v?.value)}>
+								{v?.label}
+							</MenuItem>
+					  ))
+					: null}
+			</Menu>
+		</div>
+	);
 }
 
 export default SimpleMenu;
