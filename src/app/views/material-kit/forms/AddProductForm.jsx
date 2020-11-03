@@ -29,6 +29,7 @@ import SimpleMenu from '../menu/SimpleMenu';
 import { IconButton } from '@material-ui/core';
 import Color from '../../utilities/Color';
 import { addNewProduct } from 'app/redux/actions/ProductAction';
+import MySpinner from 'matx/components/MySpinner';
 
 const CATEGORY = {
 	smart_phone: 1,
@@ -114,12 +115,15 @@ class AddProductForm extends Component {
 		const sendData = JSON.stringify(this.convertData());
 		console.log(sendData);
 		try {
-			const res = await addNewProduct(
-				sendData,
-				'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJpYXQiOjE2MDQwNTk4MzQsImV4cCI6MTYwNDA2MzQzNH0.I8avyobdq8LMK8au6Kc3CKlYmFmo4YbcNPUOIP3FqU3T5bJ1CrJ8jTXnC7iecQCUQD0vYxIqGbktxYdpX9iCTw'
-			);
+			MySpinner.show();
+			const res = await addNewProduct(sendData, this.props?.token);
 			console.log('response', res);
+			MySpinner.hide(() => {}, {
+				label: 'Add product successful !',
+				value: 0,
+			});
 		} catch (err) {
+			MySpinner.hide(() => {}, { label: 'Add product failed !', value: 1 });
 			console.log('send data err', err);
 		}
 	};

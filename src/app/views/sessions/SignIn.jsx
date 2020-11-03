@@ -15,6 +15,8 @@ import { withRouter } from 'react-router-dom';
 
 import { loginWithEmailAndPassword } from '../../redux/actions/LoginActions';
 import { logoutUser } from 'app/redux/actions/UserActions';
+import { Dialog, DialogTitle } from '@material-ui/core';
+import MySpinner from 'matx/components/MySpinner';
 
 const styles = (theme) => ({
 	wrapper: {
@@ -35,6 +37,7 @@ class SignIn extends Component {
 		email: 'admin@gmail.com',
 		password: 'admin',
 		agreement: '',
+		spinnerOpen: false,
 	};
 	handleChange = (event) => {
 		event.persist();
@@ -42,15 +45,24 @@ class SignIn extends Component {
 			[event.target.name]: event.target.value,
 		});
 	};
-	handleFormSubmit = (event) => {
-		console.log(this.state);
-		this.props.loginWithEmailAndPassword({ ...this.state });
+	handleFormSubmit = async (event) => {
+		try {
+			console.log(this.state);
+			this.props.loginWithEmailAndPassword({ ...this.state });
+		} catch (err) {
+			console.log('Login err');
+		}
 	};
 	componentDidMount() {
 		console.log('Did mount ne');
 		console.log('user', this.props.user, this.props.login);
 		logoutUser();
 	}
+	_handleModalStateChange = () => {
+		console.log('state modal change ne');
+		this.setState({ spinnerOpen: !this.state.spinnerOpen });
+	};
+
 	render() {
 		console.log('Sign in ne');
 		let { email, password } = this.state;
@@ -106,6 +118,7 @@ class SignIn extends Component {
 											control={<Checkbox checked />}
 											label="I have read and agree to the terms of service."
 										/>
+
 										<div className="flex flex-middle mb-8">
 											<div className={classes.wrapper}>
 												<Button
@@ -116,12 +129,6 @@ class SignIn extends Component {
 												>
 													Sign in to Enter Dashboard
 												</Button>
-												{this.props.login.loading && (
-													<CircularProgress
-														size={24}
-														className={classes.buttonProgress}
-													/>
-												)}
 											</div>
 											<span className="ml-16 mr-8">or</span>
 											<Button

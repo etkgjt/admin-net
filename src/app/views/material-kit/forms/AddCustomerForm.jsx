@@ -19,6 +19,7 @@ import SimpleCard from 'matx/components/cards/SimpleCard';
 import SimpleMenu from '../menu/SimpleMenu';
 
 import { addNewCustomer } from '../../../redux/actions/CustomerAction';
+import MySpinner from 'matx/components/MySpinner';
 
 class AddCustomerForm extends Component {
 	state = {
@@ -53,6 +54,7 @@ class AddCustomerForm extends Component {
 	handleSubmit = async (event) => {
 		try {
 			console.log('submitted');
+			MySpinner.show();
 			let {
 				username,
 				firstName,
@@ -79,7 +81,12 @@ class AddCustomerForm extends Component {
 			console.log('data', data);
 			const res = await addNewCustomer(data);
 			console.log(res);
+			MySpinner.hide(() => {}, {
+				label: 'Add Customer Success !',
+				value: 0,
+			});
 		} catch (err) {
+			MySpinner.hide(() => {}, { label: 'Add Customer Failed', value: 1 });
 			console.log('add customeer err', err);
 		}
 	};

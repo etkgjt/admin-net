@@ -12,12 +12,14 @@ import { Store } from './redux/Store';
 import Auth from './auth/Auth';
 import MatxLayout from './MatxLayout/MatxLayout';
 import AuthGuard from './auth/AuthGuard';
+import MySpinner from 'matx/components/MySpinner';
 
 const App = () => {
 	return (
 		<AppContext.Provider value={{ routes }}>
 			<Provider store={Store}>
 				<MatxTheme>
+					<MySpinner />
 					<Router history={history}>
 						<Auth>
 							<AuthGuard>

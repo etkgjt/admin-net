@@ -3,6 +3,7 @@ import FirebaseAuthService from '../../services/firebase/firebaseAuthService';
 import { setUserData } from './UserActions';
 import history from 'history.js';
 import { API } from 'utils';
+import MySpinner from 'matx/components/MySpinner';
 
 export const LOGIN_ERROR = 'LOGIN_ERROR';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
@@ -27,6 +28,7 @@ function parseJwt(token) {
 export function loginWithEmailAndPassword({ email, password }) {
 	return async (dispatch) => {
 		try {
+			MySpinner.show();
 			dispatch({
 				type: LOGIN_LOADING,
 			});
@@ -51,7 +53,9 @@ export function loginWithEmailAndPassword({ email, password }) {
 					payload: `You don't have permission`,
 				});
 			}
+			MySpinner.hide(() => {});
 		} catch (err) {
+			MySpinner.hide();
 			return dispatch({
 				type: LOGIN_ERROR,
 				payload: err,
