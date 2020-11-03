@@ -170,7 +170,7 @@ class AddProductForm extends Component {
 		return {
 			name,
 			price: price * 1,
-			brand_id: brand * 1,
+			brand_id: brand * 1 + 1,
 			category_id: CATEGORY[category] * 1,
 			date: date.toString(),
 			quantity: quantity * 1,
