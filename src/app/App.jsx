@@ -13,6 +13,7 @@ import Auth from './auth/Auth';
 import MatxLayout from './MatxLayout/MatxLayout';
 import AuthGuard from './auth/AuthGuard';
 import MySpinner from 'matx/components/MySpinner';
+import MyAlert from 'matx/components/MyAlert';
 
 const App = () => {
 	return (
@@ -20,6 +21,7 @@ const App = () => {
 			<Provider store={Store}>
 				<MatxTheme>
 					<MySpinner />
+					<MyAlert />
 					<Router history={history}>
 						<Auth>
 							<AuthGuard>

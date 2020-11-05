@@ -15,10 +15,10 @@ const orderReducer = (state = initialState, action) => {
 				...state,
 				orders: [...action.payload],
 			};
-        }
-        default:{
-            return state,
-        }
+		}
+		default: {
+			return state;
+		}
 	}
 };
 export default orderReducer;

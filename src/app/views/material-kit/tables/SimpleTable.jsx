@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { useHistory } from 'react-router-dom';
+
 import {
 	Table,
 	TableHead,
@@ -10,6 +11,13 @@ import {
 	Icon,
 	TableRow,
 } from '@material-ui/core';
+import MyAlert from 'matx/components/MyAlert';
+import {
+	deleteProduct,
+	updateProductsRedux,
+} from 'app/redux/actions/ProductAction';
+import { useDispatch, useSelector } from 'react-redux';
+import MySpinner from 'matx/components/MySpinner';
 
 const subscribarList = [
 	{
@@ -126,6 +134,8 @@ const tableHeading = {
 
 const SimpleTable = ({ type, data }) => {
 	const history = useHistory();
+	const dispatch = useDispatch();
+	const { token } = useSelector((state) => state.user);
 	const _handleEditCustomerInfo = (info) => {
 		history.push('/customer/view-customer', { data: info });
 	};
@@ -133,6 +143,33 @@ const SimpleTable = ({ type, data }) => {
 		history.push('/product/view-product', { data: info });
 	};
 	const _handleDeleteProduct = (productId) => {
+		MyAlert.show(
+			'Warning',
+			'Do you want to delete this product ? ',
+			true,
+			async () => {
+				try {
+					MySpinner.show();
+					const res = await deleteProduct(token, productId);
+					console.log('dleete product success', res);
+					const newProductList = [...data].filter(
+						(v) => v.id !== productId
+					);
+					updateProductsRedux(dispatch, newProductList);
+					MySpinner.hide(() => {}, {
+						label: 'Delete Success !',
+						value: 0,
+					});
+				} catch (err) {
+					MySpinner.hide(() => {}, {
+						label: 'Delete Failed !',
+						value: 1,
+					});
+					console.log('Delete pRoduct err', err);
+				}
+			},
+			() => console.log('No click ne')
+		);
 		console.log('product Id ne', productId);
 	};
 	return (

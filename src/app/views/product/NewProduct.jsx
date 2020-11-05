@@ -38,5 +38,4 @@ const NewProduct = () => {
 		</div>
 	);
 };
-
 export default NewProduct;

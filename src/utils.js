@@ -1,6 +1,6 @@
 import moment from 'moment';
 import axios from 'axios';
-export const BASE_URL = 'https://c75bebee687a.ngrok.io';
+export const BASE_URL = 'https://javaapiweb.herokuapp.com';
 export const API = axios.create({
 	baseURL: BASE_URL,
 	headers: {

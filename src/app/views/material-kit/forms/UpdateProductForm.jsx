@@ -29,6 +29,7 @@ import SimpleMenu from '../menu/SimpleMenu';
 import { IconButton } from '@material-ui/core';
 import Color from '../../utilities/Color';
 import { addNewProduct, updateProduct } from 'app/redux/actions/ProductAction';
+import MySpinner from 'matx/components/MySpinner';
 
 const CATEGORY = {
 	smartphone: 1,
@@ -97,6 +98,7 @@ class UpdateProductForm extends Component {
 	componentDidMount() {
 		// custom rule will have name 'isPasswordMatch'
 		console.log('Product info', this.props);
+		console.log('state ne', this.state);
 		ValidatorForm.addValidationRule('isPasswordMatch', (value) => {
 			if (value !== this.state.password) {
 				return false;
@@ -112,6 +114,8 @@ class UpdateProductForm extends Component {
 
 	handleSubmit = async () => {
 		try {
+			MySpinner.show();
+
 			console.log('submitted');
 			console.log('data ne', this.state);
 			console.log(this.convertData());
@@ -126,7 +130,15 @@ class UpdateProductForm extends Component {
 				);
 				console.log('response', res);
 			} else throw new Error('Cannot get Product Id to update');
+			MySpinner.hide(() => {}, {
+				label: 'Update Product Success !',
+				value: 0,
+			});
 		} catch (err) {
+			MySpinner.hide(() => {}, {
+				label: 'Update Product Failed !',
+				value: 1,
+			});
 			console.log('send data err', err);
 		}
 	};
@@ -170,14 +182,15 @@ class UpdateProductForm extends Component {
 			os,
 			memory,
 		} = this.state;
+		const newImgs = image?.map((v) => v?.url);
 		return {
 			name,
 			price: price * 1,
-			brand_id: brand * 1 + 1,
+			brand_id: brand * 1,
 			category_id: CATEGORY[category] * 1,
 			date: date.toString(),
 			quantity: quantity * 1,
-			images: image,
+			images: newImgs,
 			description: {
 				cpu,
 				ram,
@@ -189,25 +202,6 @@ class UpdateProductForm extends Component {
 				introduction,
 			},
 		};
-		// return {
-		// 	name,
-		// 	price: price * 1,
-		// 	brand_id: brand * 1,
-		// 	category_id: CATEGORY[category] * 1,
-		// 	date: date.toString(),
-		// 	quantity: quantity * 1,
-		// 	images: image,
-		// 	description: {
-		// 		cpu,
-		// 		ram,
-		// 		color,
-		// 		screen_size,
-		// 		battery,
-		// 		os,
-		// 		memory,
-		// 		introduction,
-		// 	},
-		// };
 	};
 	render() {
 		let {

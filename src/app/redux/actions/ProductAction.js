@@ -38,6 +38,7 @@ export const updateProduct = (token, product_id, product_info) =>
 			'token',
 			token
 		);
+		console.log(`/product/${product_id}`);
 		API.put(`/product/${product_id}`, product_info, {
 			headers: {
 				Authorization: token,
