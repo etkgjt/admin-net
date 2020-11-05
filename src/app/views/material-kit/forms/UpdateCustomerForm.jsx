@@ -18,25 +18,31 @@ import DateFnsUtils from '@date-io/date-fns';
 import SimpleCard from 'matx/components/cards/SimpleCard';
 import SimpleMenu from '../menu/SimpleMenu';
 
-import { addNewCustomer } from '../../../redux/actions/CustomerAction';
+import {
+	addNewCustomer,
+	updateCustomer,
+} from '../../../redux/actions/CustomerAction';
+import MySpinner from 'matx/components/MySpinner';
 
 class UpdateCustomerForm extends Component {
 	state = {
-		username: '',
-		firstName: '',
-		lastName: '',
-		email: '',
+		username: this.props?.userInfo?.username || '',
+		firstName: this.props?.userInfo?.first_name || '',
+		lastName: this.props?.userInfo?.last_name || '',
+		email: this.props?.userInfo?.username || '',
 		date: new Date(),
 		creditCard: '',
-		mobile: '',
-		password: '',
+		mobile: this.props?.userInfo?.phone_number || '',
 		confirmPassword: '',
-		gender: 'male',
-		agreement: false,
+		gender: this.props?.userInfo?.gender === 1 ? 'male' : 'female',
+		newPassword: '',
+		confirmNewPassword: '',
+		address: this.props?.userInfo?.address,
 	};
 
 	componentDidMount() {
 		// custom rule will have name 'isPasswordMatch'
+		console.log('customer form render ne', this.props);
 		ValidatorForm.addValidationRule('isPasswordMatch', (value) => {
 			if (value !== this.state.password) {
 				return false;
@@ -52,19 +58,17 @@ class UpdateCustomerForm extends Component {
 
 	handleSubmit = async (event) => {
 		try {
+			MySpinner.show();
 			console.log('submitted');
 			let {
-				username,
 				firstName,
 				lastName,
 				creditCard,
 				mobile,
-				password,
-				confirmPassword,
+				newPassword,
 				gender,
-				date,
 				email,
-				agreement,
+				address,
 			} = this.state;
 			const data = JSON.stringify({
 				username: email,
@@ -74,12 +78,25 @@ class UpdateCustomerForm extends Component {
 				phone_number: mobile,
 				gender: gender === 'male' ? 1 : 2,
 				role: 2,
-				password,
+				password: newPassword ? newPassword : null,
+				address,
 			});
 			console.log('data', data);
-			const res = await addNewCustomer(data);
+			const res = await updateCustomer(
+				this.props?.token,
+				this.props?.userInfo?.id,
+				data
+			);
 			console.log(res);
+			MySpinner.hide(() => {}, {
+				label: 'Update Customer Success !',
+				value: 0,
+			});
 		} catch (err) {
+			MySpinner.hide(() => {}, {
+				label: 'Update customer failed !',
+				value: 1,
+			});
 			console.log('add customeer err', err);
 		}
 	};
@@ -97,18 +114,18 @@ class UpdateCustomerForm extends Component {
 
 	render() {
 		let {
-			username,
 			firstName,
 			lastName,
 			creditCard,
 			mobile,
-			password,
-			confirmPassword,
 			gender,
 			date,
 			email,
-			agreement,
+			newPassword,
+			confirmNewPassword,
+			address,
 		} = this.state;
+
 		return (
 			<div>
 				<SimpleCard>
@@ -175,23 +192,6 @@ class UpdateCustomerForm extends Component {
 										'email is not valid',
 									]}
 								/>
-
-								{/* <MuiPickersUtilsProvider utils={DateFnsUtils}>
-								<KeyboardDatePicker
-									className="mb-16 w-100"
-									margin="none"
-									id="mui-pickers-date"
-									label="Date picker"
-									inputVariant="standard"
-									type="text"
-									autoOk={true}
-									value={date}
-									onChange={this.handleDateChange}
-									KeyboardButtonProps={{
-										'aria-label': 'change date',
-									}}
-								/>
-							</MuiPickersUtilsProvider> */}
 								<TextValidator
 									className="mb-32 w-100"
 									label="Credit Card"
@@ -199,18 +199,13 @@ class UpdateCustomerForm extends Component {
 									type="number"
 									name="creditCard"
 									value={creditCard}
-									// validators={[
-									// 	'minStringLength:16',
-									// 	'maxStringLength: 16',
-									// ]}
-									// errorMessages={['this field is required']}
 								/>
 							</Grid>
 
 							<Grid item lg={6} md={6} sm={12} xs={12}>
 								<TextValidator
 									className="mb-16 w-100"
-									label="Mobile Nubmer"
+									label="Phone Number"
 									onChange={this.handleChange}
 									type="text"
 									name="mobile"
@@ -220,26 +215,31 @@ class UpdateCustomerForm extends Component {
 								/>
 								<TextValidator
 									className="mb-16 w-100"
-									label="Password"
+									label="Address"
 									onChange={this.handleChange}
-									name="password"
-									type="password"
-									value={password}
+									type="text"
+									name="address"
+									value={address ? address : ''}
 									validators={['required']}
 									errorMessages={['this field is required']}
 								/>
 								<TextValidator
 									className="mb-16 w-100"
-									label="Confirm Password"
+									label="NewPassword"
 									onChange={this.handleChange}
-									name="confirmPassword"
+									name="newPassword"
 									type="password"
-									value={confirmPassword}
-									validators={['required', 'isPasswordMatch']}
-									errorMessages={[
-										'this field is required',
-										"password didn't match",
-									]}
+									value={newPassword}
+								/>
+								<TextValidator
+									className="mb-16 w-100"
+									label="Confirm New Password"
+									onChange={this.handleChange}
+									name="confirmNewPassword"
+									type="password"
+									value={confirmNewPassword}
+									// validators={['isPasswordMatch']}
+									// errorMessages={["password didn't match"]}
 								/>
 								<RadioGroup
 									className="mb-16"
@@ -261,29 +261,10 @@ class UpdateCustomerForm extends Component {
 										labelPlacement="end"
 									/>
 								</RadioGroup>
-								<FormControlLabel
-									control={
-										<Checkbox
-											checked={agreement === true}
-											name="agreement"
-											onChange={() =>
-												this.setState({
-													agreement: !this.state.agreement,
-												})
-											}
-										/>
-									}
-									label="I have read and agree to the terms of service."
-								/>
 							</Grid>
 						</Grid>
 
-						<Button
-							color="primary"
-							variant="contained"
-							type="submit"
-							disabled={agreement === false}
-						>
+						<Button color="primary" variant="contained" type="submit">
 							<Icon>send</Icon>
 							<span className="pl-8 capitalize">Update</span>
 						</Button>

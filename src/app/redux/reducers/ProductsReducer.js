@@ -7,7 +7,13 @@ const productsReducer = (state = initialState, action) => {
 		case REDUX.CLEAR_DATA: {
 			return initialState;
 		}
-		case REDUX.UPDATE_PRODUCTS: {
+		case REDUX.UPDATE_PRODUCT_LIST: {
+			return {
+				...state,
+				products: action.payload,
+			};
+		}
+		case REDUX.UPDATE_PRODUCT_INFO: {
 			return {
 				...state,
 				products: action.payload,

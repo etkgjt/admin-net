@@ -32,7 +32,7 @@ import { addNewProduct } from 'app/redux/actions/ProductAction';
 import MySpinner from 'matx/components/MySpinner';
 
 const CATEGORY = {
-	smart_phone: 1,
+	smartphone: 1,
 	laptop: 2,
 	tablet: 3,
 	accessories: 4,
@@ -76,10 +76,10 @@ const BRAND_LIST = [
 class AddProductForm extends Component {
 	state = {
 		name: '',
-		description: '',
+		introduction: '',
 		brand: 1,
 		date: new Date(),
-		category: 'smart_phone',
+		category: 'smartphone',
 		price: null,
 		quantity: null,
 		image: [],
@@ -151,7 +151,7 @@ class AddProductForm extends Component {
 	convertData = () => {
 		let {
 			name,
-			description,
+			introduction,
 			brand,
 			category,
 			date,
@@ -183,6 +183,7 @@ class AddProductForm extends Component {
 				battery,
 				os,
 				memory,
+				introduction,
 			},
 		};
 	};
@@ -190,7 +191,7 @@ class AddProductForm extends Component {
 	render() {
 		let {
 			name,
-			description,
+			introduction,
 			brand,
 			category,
 			date,
@@ -243,7 +244,7 @@ class AddProductForm extends Component {
 									validators={['required']}
 								>
 									<FormControlLabel
-										value="smart_phone"
+										value="smartphone"
 										control={<Radio color="secondary" />}
 										label="Smart Phone"
 										labelPlacement="end"
@@ -378,11 +379,11 @@ class AddProductForm extends Component {
 										/>
 										<TextValidator
 											className="mb-16 w-100"
-											label="Description"
+											label="Introduction"
 											onChange={this.handleChange}
 											type="text"
-											name="description"
-											value={description}
+											name="introduction"
+											value={introduction}
 											validators={['required']}
 											errorMessages={['this field is required']}
 											variant="outlined"
@@ -392,11 +393,11 @@ class AddProductForm extends Component {
 									<div>
 										<TextValidator
 											className="mb-16 w-100"
-											label="Description"
+											label="Introduction"
 											onChange={this.handleChange}
 											type="text"
-											name="description"
-											value={description}
+											name="introduction"
+											value={introduction}
 											validators={['required']}
 											errorMessages={['this field is required']}
 											variant="outlined"

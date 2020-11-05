@@ -1,6 +1,6 @@
 import moment from 'moment';
 import axios from 'axios';
-export const BASE_URL = 'https://webbanhangapi.herokuapp.com/';
+export const BASE_URL = 'https://c75bebee687a.ngrok.io';
 export const API = axios.create({
 	baseURL: BASE_URL,
 	headers: {

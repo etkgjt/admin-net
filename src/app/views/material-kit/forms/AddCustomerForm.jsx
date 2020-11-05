@@ -34,6 +34,7 @@ class AddCustomerForm extends Component {
 		confirmPassword: '',
 		gender: 'male',
 		agreement: false,
+		address: '',
 	};
 
 	componentDidMount() {
@@ -67,6 +68,7 @@ class AddCustomerForm extends Component {
 				date,
 				email,
 				agreement,
+				address,
 			} = this.state;
 			const data = JSON.stringify({
 				username: email,
@@ -77,6 +79,7 @@ class AddCustomerForm extends Component {
 				gender: gender === 'male' ? 1 : 2,
 				role: 2,
 				password,
+				address,
 			});
 			console.log('data', data);
 			const res = await addNewCustomer(data);
@@ -115,6 +118,7 @@ class AddCustomerForm extends Component {
 			date,
 			email,
 			agreement,
+			address,
 		} = this.state;
 		return (
 			<div>
@@ -217,11 +221,21 @@ class AddCustomerForm extends Component {
 							<Grid item lg={6} md={6} sm={12} xs={12}>
 								<TextValidator
 									className="mb-16 w-100"
-									label="Mobile Nubmer"
+									label="Phone Number"
 									onChange={this.handleChange}
 									type="text"
 									name="mobile"
 									value={mobile}
+									validators={['required']}
+									errorMessages={['this field is required']}
+								/>
+								<TextValidator
+									className="mb-16 w-100"
+									label="Address"
+									onChange={this.handleChange}
+									type="text"
+									name="address"
+									value={address}
 									validators={['required']}
 									errorMessages={['this field is required']}
 								/>

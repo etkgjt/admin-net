@@ -25,7 +25,7 @@ class MySpinner extends React.PureComponent {
 				MySpinner.instance.setState({ status: status });
 				setTimeout(() => {
 					MySpinner.instance.setState({ visible: false });
-				}, 2000);
+				}, 1000);
 			} else MySpinner.instance.setState({ visible: false });
 			console.log('modal hide ne');
 		}

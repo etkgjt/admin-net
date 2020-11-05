@@ -66,7 +66,7 @@ export function loginWithEmailAndPassword({ email, password }) {
 const getUserInfo = (token) =>
 	new Promise((resolve, reject) => {
 		const { sub } = parseJwt(token);
-		API.get(`api/user?value=${sub}`, {
+		API.get(`/user?value=${sub}`, {
 			headers: {
 				Authorization: token,
 				'Content-Type': 'application/json',
@@ -78,7 +78,7 @@ const getUserInfo = (token) =>
 const userLogin = (email, password) =>
 	new Promise((resolve, reject) => {
 		const data = JSON.stringify({ username: email, password: password });
-		API.post('/api/login', data, {
+		API.post('/login', data, {
 			headers: {
 				'Content-Type': 'application/json',
 			},

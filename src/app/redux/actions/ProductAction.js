@@ -4,13 +4,13 @@ import { REDUX } from '../type';
 
 export const getAllProducts = () =>
 	new Promise((resolve, reject) => {
-		API.get('/api/product')
+		API.get('/product')
 			.then((res) => resolve(res?.data))
 			.catch((err) => reject(err));
 	});
 export const addNewProduct = (product, token) =>
 	new Promise((resolve, reject) => {
-		API.post('/api/product/add', product, {
+		API.post('/product/add', product, {
 			headers: {
 				Authorization: token,
 			},
@@ -20,7 +20,7 @@ export const addNewProduct = (product, token) =>
 	});
 export const deleteProduct = (token, product_id) =>
 	new Promise((resolve, reject) => {
-		API.delete(`api/product/delete/${product_id}`, {
+		API.delete(`/product/delete/${product_id}`, {
 			headers: {
 				Authorization: token,
 			},
@@ -30,7 +30,15 @@ export const deleteProduct = (token, product_id) =>
 	});
 export const updateProduct = (token, product_id, product_info) =>
 	new Promise((resolve, reject) => {
-		API.put(`/api/product/${product_id}`, product_info, {
+		console.log(
+			'product id',
+			product_id,
+			'product_info',
+			product_info,
+			'token',
+			token
+		);
+		API.put(`/product/${product_id}`, product_info, {
 			headers: {
 				Authorization: token,
 			},
@@ -40,5 +48,5 @@ export const updateProduct = (token, product_id, product_info) =>
 	});
 
 export const updateProductsRedux = (dispatch, payload) => {
-	dispatch({ type: REDUX.UPDATE_PRODUCTS, payload: payload });
+	dispatch({ type: REDUX.UPDATE_PRODUCT_LIST, payload: payload });
 };

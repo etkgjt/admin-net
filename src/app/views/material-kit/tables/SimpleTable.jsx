@@ -1,4 +1,6 @@
 import React from 'react';
+
+import { useHistory } from 'react-router-dom';
 import {
 	Table,
 	TableHead,
@@ -123,6 +125,16 @@ const tableHeading = {
 };
 
 const SimpleTable = ({ type, data }) => {
+	const history = useHistory();
+	const _handleEditCustomerInfo = (info) => {
+		history.push('/customer/view-customer', { data: info });
+	};
+	const _handleEditProduct = (info) => {
+		history.push('/product/view-product', { data: info });
+	};
+	const _handleDeleteProduct = (productId) => {
+		console.log('product Id ne', productId);
+	};
 	return (
 		<div className="w-100 overflow-auto">
 			<Table style={{ whiteSpace: 'pre' }}>
@@ -154,7 +166,7 @@ const SimpleTable = ({ type, data }) => {
 									<TableCell className="px-0 capitalize" align="left">
 										{`${item?.first_name} ${item?.last_name}`}
 									</TableCell>
-									<TableCell className="px-0 capitalize">
+									<TableCell className="px-0">
 										{`${item?.username}`}
 									</TableCell>
 									<TableCell className="px-0 capitalize" align="left">
@@ -165,7 +177,9 @@ const SimpleTable = ({ type, data }) => {
 									</TableCell>
 
 									<TableCell className="px-0" align="right">
-										<IconButton>
+										<IconButton
+											onClick={() => _handleEditCustomerInfo(item)}
+										>
 											<Icon>create</Icon>
 										</IconButton>
 										<IconButton>
@@ -180,22 +194,32 @@ const SimpleTable = ({ type, data }) => {
 									<TableCell className="px-0 capitalize" align="left">
 										{item?.name}
 									</TableCell>
-									<TableCell className="px-0 capitalize" align="left">
+									<TableCell
+										className="px-0 capitalize overflow-hidden pr-5"
+										align="left"
+									>
 										{item?.description?.introduction
 											? item?.description?.introduction
-											: 'Hello'}
+											: 'None'}
 									</TableCell>
-									<TableCell className="px-0 capitalize" align="left">
+									<TableCell
+										className="px-0 pl-20  capitalize"
+										align="left"
+									>
 										{item?.stock}
 									</TableCell>
 									<TableCell className="px-0 capitalize">
 										{item?.price}
 									</TableCell>
 									<TableCell className="px-0" align="right">
-										<IconButton>
+										<IconButton
+											onClick={() => _handleEditProduct(item)}
+										>
 											<Icon>create</Icon>
 										</IconButton>
-										<IconButton>
+										<IconButton
+											onClick={() => _handleDeleteProduct(item?.id)}
+										>
 											<Icon color="error">close</Icon>
 										</IconButton>
 									</TableCell>

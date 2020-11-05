@@ -8,7 +8,7 @@ export const USER_LOGGED_OUT = 'USER_LOGGED_OUT';
 
 export const userLogin = (userInfo) =>
 	new Promise((resolve, reject) => {
-		API.post('/api/logn', userInfo, {
+		API.post('/login', userInfo, {
 			headers: {
 				'Content-Type': 'application/json',
 			},
@@ -18,7 +18,7 @@ export const userLogin = (userInfo) =>
 	});
 export const getUserInfo = (token, userName) =>
 	new Promise((resolve, reject) => {
-		API.get(`/api/user?value=${userName}`, {
+		API.get(`/user?value=${userName}`, {
 			headers: {
 				Authorization: token,
 			},
@@ -35,8 +35,6 @@ export function setUserData(user) {
 		});
 	};
 }
-
-
 
 export function logoutUser() {
 	console.log('Log out ne');

@@ -4,7 +4,7 @@ import { REDUX } from '../type';
 
 export const addNewCustomer = (userInfo) =>
 	new Promise((resolve, reject) => {
-		API.post('/api/user/add', userInfo, {
+		API.post('/user/add', userInfo, {
 			headers: {
 				'Content-Type': 'application/json',
 			},
@@ -14,7 +14,7 @@ export const addNewCustomer = (userInfo) =>
 	});
 export const getAllCustomer = (token) =>
 	new Promise((resolve, reject) => {
-		API.get('/api/user/all', {
+		API.get('/user/all', {
 			headers: {
 				'Content-Type': 'application/json',
 				Authorization: token,
@@ -28,7 +28,7 @@ export const getAllCustomer = (token) =>
 // })
 export const updateCustomer = (token, customer_id, customer_info) =>
 	new Promise((resolve, reject) => {
-		API.put(`/api/user/${customer_id}`, customer_info, {
+		API.put(`/user/${customer_id}`, customer_info, {
 			headers: {
 				Authorization: token,
 			},

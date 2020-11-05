@@ -28,10 +28,10 @@ import { SimpleCard } from 'matx';
 import SimpleMenu from '../menu/SimpleMenu';
 import { IconButton } from '@material-ui/core';
 import Color from '../../utilities/Color';
-import { addNewProduct } from 'app/redux/actions/ProductAction';
+import { addNewProduct, updateProduct } from 'app/redux/actions/ProductAction';
 
 const CATEGORY = {
-	smart_phone: 1,
+	smartphone: 1,
 	laptop: 2,
 	tablet: 3,
 	accessories: 4,
@@ -74,26 +74,29 @@ const BRAND_LIST = [
 ];
 class UpdateProductForm extends Component {
 	state = {
-		name: '',
+		name: this.props?.productInfo?.name || '',
 		description: '',
-		brand: 1,
+		brand: this.props?.productInfo?.brand?.id || '1',
 		date: new Date(),
-		category: 'smart_phone',
-		price: null,
-		quantity: null,
-		image: [],
+		category: this.props?.productInfo?.category?.name || 'smartphone',
+		price: this.props?.productInfo?.price || 0,
+		quantity: this.props?.productInfo?.stock || 0,
+		image: this.props?.productInfo?.images || [],
 		tempImg: '',
-		cpu: '',
-		ram: '',
-		os: '',
-		screen_size: '',
-		battery: '',
-		memory: '',
-		color: '',
+		cpu: this.props?.productInfo?.description?.cpu || 'none',
+		ram: this.props?.productInfo?.description?.ram || 0,
+		os: this.props?.productInfo?.description?.os || 'none',
+		screen_size: this.props?.productInfo?.description?.screen_size || 0,
+		battery: this.props?.productInfo?.description?.battery || 0,
+		memory: this.props?.productInfo?.description?.memory || 0,
+		color: this.props?.productInfo?.description?.color || 'red',
+		introduction:
+			this.props?.productInfo?.description?.introduction || 'none',
 	};
 
 	componentDidMount() {
 		// custom rule will have name 'isPasswordMatch'
+		console.log('Product info', this.props);
 		ValidatorForm.addValidationRule('isPasswordMatch', (value) => {
 			if (value !== this.state.password) {
 				return false;
@@ -108,17 +111,21 @@ class UpdateProductForm extends Component {
 	}
 
 	handleSubmit = async () => {
-		console.log('submitted');
-		console.log('data ne', this.state);
-		console.log(this.convertData());
-		const sendData = JSON.stringify(this.convertData());
-		console.log(sendData);
 		try {
-			const res = await addNewProduct(
-				sendData,
-				'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbkBnbWFpbC5jb20iLCJpYXQiOjE2MDQwNTk4MzQsImV4cCI6MTYwNDA2MzQzNH0.I8avyobdq8LMK8au6Kc3CKlYmFmo4YbcNPUOIP3FqU3T5bJ1CrJ8jTXnC7iecQCUQD0vYxIqGbktxYdpX9iCTw'
-			);
-			console.log('response', res);
+			console.log('submitted');
+			console.log('data ne', this.state);
+			console.log(this.convertData());
+			console.log('this state img', this.state.image);
+			const sendData = JSON.stringify(this.convertData());
+			console.log(sendData);
+			if (this.props?.productInfo?.id) {
+				const res = await updateProduct(
+					this.props.token,
+					this.props?.productInfo?.id,
+					sendData
+				);
+				console.log('response', res);
+			} else throw new Error('Cannot get Product Id to update');
 		} catch (err) {
 			console.log('send data err', err);
 		}
@@ -135,6 +142,7 @@ class UpdateProductForm extends Component {
 		this.setState({ date });
 	};
 	addImage = () => {
+		console.log('temp Img', this.state.tempImg);
 		this.setState({
 			image: [...this.state.image, this.state.tempImg],
 			tempImg: '',
@@ -147,14 +155,13 @@ class UpdateProductForm extends Component {
 	convertData = () => {
 		let {
 			name,
-			description,
+			introduction,
 			brand,
 			category,
 			date,
 			price,
 			image,
 			quantity,
-			tempImg,
 			cpu,
 			ram,
 			screen_size,
@@ -166,7 +173,7 @@ class UpdateProductForm extends Component {
 		return {
 			name,
 			price: price * 1,
-			brand_id: brand * 1,
+			brand_id: brand * 1 + 1,
 			category_id: CATEGORY[category] * 1,
 			date: date.toString(),
 			quantity: quantity * 1,
@@ -179,8 +186,28 @@ class UpdateProductForm extends Component {
 				battery,
 				os,
 				memory,
+				introduction,
 			},
 		};
+		// return {
+		// 	name,
+		// 	price: price * 1,
+		// 	brand_id: brand * 1,
+		// 	category_id: CATEGORY[category] * 1,
+		// 	date: date.toString(),
+		// 	quantity: quantity * 1,
+		// 	images: image,
+		// 	description: {
+		// 		cpu,
+		// 		ram,
+		// 		color,
+		// 		screen_size,
+		// 		battery,
+		// 		os,
+		// 		memory,
+		// 		introduction,
+		// 	},
+		// };
 	};
 	render() {
 		let {
@@ -200,6 +227,7 @@ class UpdateProductForm extends Component {
 			battery,
 			os,
 			memory,
+			introduction,
 		} = this.state;
 		return (
 			<div>
@@ -238,7 +266,7 @@ class UpdateProductForm extends Component {
 									validators={['required']}
 								>
 									<FormControlLabel
-										value="smart_phone"
+										value="smartphone"
 										control={<Radio color="secondary" />}
 										label="Smart Phone"
 										labelPlacement="end"
@@ -252,7 +280,7 @@ class UpdateProductForm extends Component {
 									<FormControlLabel
 										value="tablet"
 										control={<Radio color="secondary" />}
-										label="Others"
+										label="Tablet"
 										labelPlacement="end"
 									/>
 									<FormControlLabel
@@ -371,17 +399,6 @@ class UpdateProductForm extends Component {
 											errorMessages={['this field is required']}
 											variant="outlined"
 										/>
-										<TextValidator
-											className="mb-16 w-100"
-											label="Description"
-											onChange={this.handleChange}
-											type="text"
-											name="description"
-											value={description}
-											validators={['required']}
-											errorMessages={['this field is required']}
-											variant="outlined"
-										/>
 									</div>
 								) : (
 									<div>
@@ -401,6 +418,17 @@ class UpdateProductForm extends Component {
 							</Grid>
 
 							<Grid item lg={6} md={6} sm={12} xs={12}>
+								<TextValidator
+									className="mb-16 w-100"
+									label="Introduction"
+									onChange={this.handleChange}
+									type="text"
+									name="introduction"
+									value={introduction}
+									validators={['required']}
+									errorMessages={['this field is required']}
+									variant="outlined"
+								/>
 								<TextValidator
 									className="mb-16 w-100"
 									label="Price"

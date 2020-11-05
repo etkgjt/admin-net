@@ -9,9 +9,12 @@ import { useDispatch, useSelector } from 'react-redux';
 
 const ProductList = React.memo(() => {
 	console.log('Produclist render');
-	const [data, setData] = useState([]);
+
 	const dispatch = useDispatch();
 	const productRedux = useSelector((state) => state.productReducer.products);
+	const [data, setData] = useState(
+		productRedux && productRedux.length ? productRedux : []
+	);
 	useEffect(() => {
 		if (!productRedux || (productRedux && productRedux.length === 0))
 			initialData();
