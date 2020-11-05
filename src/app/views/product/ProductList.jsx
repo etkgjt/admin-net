@@ -19,6 +19,9 @@ const ProductList = React.memo(() => {
 		if (!productRedux || (productRedux && productRedux.length === 0))
 			initialData();
 	}, []);
+	useEffect(() => {
+		if (productRedux && productRedux.length) setData(productRedux);
+	}, [productRedux]);
 	const initialData = async () => {
 		try {
 			console.log('Fetch Data ne');
