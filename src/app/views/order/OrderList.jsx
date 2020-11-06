@@ -8,6 +8,7 @@ import {
 	getOrderList,
 	updateOrdersRedux,
 } from '../../redux/actions/OrderAction';
+import MyAlert from 'matx/components/MyAlert';
 
 const OrderList = ({ location }) => {
 	const subscribarList = [
@@ -37,6 +38,7 @@ const OrderList = ({ location }) => {
 			setData(data);
 			updateOrdersRedux(dispatch, data);
 		} catch (err) {
+			MyAlert.show('Lỗi', `${err.message}`, false);
 			console.log('Get Product list err', err);
 		}
 	};

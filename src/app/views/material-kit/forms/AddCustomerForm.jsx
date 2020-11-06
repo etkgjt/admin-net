@@ -76,7 +76,7 @@ class AddCustomerForm extends Component {
 				last_name: lastName,
 				address: null,
 				phone_number: mobile,
-				gender: gender === 'male' ? 1 : 2,
+				gender: gender === 'male' ? 0 : 1,
 				role: 2,
 				password,
 				address,
@@ -89,7 +89,10 @@ class AddCustomerForm extends Component {
 				value: 0,
 			});
 		} catch (err) {
-			MySpinner.hide(() => {}, { label: 'Add Customer Failed', value: 1 });
+			MySpinner.hide(() => {}, {
+				label: `Add Customer Failed \n ${err.message}`,
+				value: 1,
+			});
 			console.log('add customeer err', err);
 		}
 	};

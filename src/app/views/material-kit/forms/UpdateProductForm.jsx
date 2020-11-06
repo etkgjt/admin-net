@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import {
 	Button,
@@ -28,8 +28,13 @@ import { SimpleCard } from 'matx';
 import SimpleMenu from '../menu/SimpleMenu';
 import { IconButton } from '@material-ui/core';
 import Color from '../../utilities/Color';
-import { addNewProduct, updateProduct } from 'app/redux/actions/ProductAction';
+import {
+	addNewProduct,
+	updateProduct,
+	updateProductsRedux,
+} from 'app/redux/actions/ProductAction';
 import MySpinner from 'matx/components/MySpinner';
+import { useSelector, useDispatch } from 'react-redux';
 
 const CATEGORY = {
 	smartphone: 1,
@@ -73,61 +78,62 @@ const BRAND_LIST = [
 	'Vsmart',
 	'MSI',
 ];
-class UpdateProductForm extends Component {
-	state = {
-		name: this.props?.productInfo?.name || '',
+const UpdateProductForm = ({ productInfo, token }) => {
+	const [state, setState] = useState({
+		name: productInfo?.name || '',
 		description: '',
-		brand: this.props?.productInfo?.brand?.id || '1',
+		brand: productInfo?.brand?.id || '1',
 		date: new Date(),
-		category: this.props?.productInfo?.category?.name || 'smartphone',
-		price: this.props?.productInfo?.price || 0,
-		quantity: this.props?.productInfo?.stock || 0,
-		image: this.props?.productInfo?.images || [],
+		category: productInfo?.category?.name || 'smartphone',
+		price: productInfo?.price || 0,
+		quantity: productInfo?.stock || 0,
+		image: productInfo?.images || [],
 		tempImg: '',
-		cpu: this.props?.productInfo?.description?.cpu || 'none',
-		ram: this.props?.productInfo?.description?.ram || 0,
-		os: this.props?.productInfo?.description?.os || 'none',
-		screen_size: this.props?.productInfo?.description?.screen_size || 0,
-		battery: this.props?.productInfo?.description?.battery || 0,
-		memory: this.props?.productInfo?.description?.memory || 0,
-		color: this.props?.productInfo?.description?.color || 'red',
-		introduction:
-			this.props?.productInfo?.description?.introduction || 'none',
-	};
-
-	componentDidMount() {
-		// custom rule will have name 'isPasswordMatch'
-		console.log('Product info', this.props);
-		console.log('state ne', this.state);
+		cpu: productInfo?.description?.cpu || 'none',
+		ram: productInfo?.description?.ram || 0,
+		os: productInfo?.description?.os || 'none',
+		screen_size: productInfo?.description?.screen_size || 0,
+		battery: productInfo?.description?.battery || 0,
+		memory: productInfo?.description?.memory || 0,
+		color: productInfo?.description?.color || 'red',
+		introduction: productInfo?.description?.introduction || 'none',
+	});
+	const { products } = useSelector((state) => state.productReducer);
+	const dispatch = useDispatch();
+	useEffect(() => {
 		ValidatorForm.addValidationRule('isPasswordMatch', (value) => {
-			if (value !== this.state.password) {
+			if (value !== state.password) {
 				return false;
 			}
 			return true;
 		});
-	}
+		return ValidatorForm.removeValidationRule('isPasswordMatch');
+	}, []);
 
-	componentWillUnmount() {
-		// remove rule when it is not needed
-		ValidatorForm.removeValidationRule('isPasswordMatch');
-	}
+	// componentWillUnmount() {
+	// 	// remove rule when it is not needed
+	// 	ValidatorForm.removeValidationRule('isPasswordMatch');
+	// }
 
-	handleSubmit = async () => {
+	const handleSubmit = async () => {
 		try {
 			MySpinner.show();
 
 			console.log('submitted');
-			console.log('data ne', this.state);
-			console.log(this.convertData());
-			console.log('this state img', this.state.image);
-			const sendData = JSON.stringify(this.convertData());
+			console.log('data ne', state);
+			console.log(convertData());
+			console.log('this state img', state.image);
+			const newData = convertData();
+			const sendData = JSON.stringify(newData);
+
 			console.log(sendData);
-			if (this.props?.productInfo?.id) {
-				const res = await updateProduct(
-					this.props.token,
-					this.props?.productInfo?.id,
-					sendData
-				);
+			if (productInfo?.id) {
+				const res = await updateProduct(token, productInfo?.id, sendData);
+				const newProductList = [
+					...products.filter((v) => v.id !== productInfo.id),
+					newData,
+				];
+				updateProductsRedux(dispatch, newProductList);
 				console.log('response', res);
 			} else throw new Error('Cannot get Product Id to update');
 			MySpinner.hide(() => {}, {
@@ -136,35 +142,36 @@ class UpdateProductForm extends Component {
 			});
 		} catch (err) {
 			MySpinner.hide(() => {}, {
-				label: 'Update Product Failed !',
+				label: `Update Product Failed ! \n ${err.message}`,
 				value: 1,
 			});
 			console.log('send data err', err);
 		}
 	};
 
-	handleChange = (event) => {
+	const handleChange = (event) => {
 		event.persist();
-		this.setState({ [event.target.name]: event.target.value });
+		setState({ ...state, [event.target.name]: event.target.value });
 	};
 
-	handleDateChange = (date) => {
+	const handleDateChange = (date) => {
 		console.log(date);
 
-		this.setState({ date });
+		setState({ ...state, date });
 	};
-	addImage = () => {
-		console.log('temp Img', this.state.tempImg);
-		this.setState({
-			image: [...this.state.image, this.state.tempImg],
+	const addImage = () => {
+		console.log('temp Img', state.tempImg);
+		setState({
+			...state,
+			image: [...state.image, state.tempImg],
 			tempImg: '',
 		});
 	};
-	_deleteImg = (img) => {
-		let newList = this.state.image.filter((v) => v !== img);
-		this.setState({ image: [...newList] });
+	const _deleteImg = (img) => {
+		let newList = state.image.filter((v) => v !== img);
+		setState({ ...state, image: [...newList] });
 	};
-	convertData = () => {
+	const convertData = () => {
 		let {
 			name,
 			introduction,
@@ -181,7 +188,7 @@ class UpdateProductForm extends Component {
 			battery,
 			os,
 			memory,
-		} = this.state;
+		} = state;
 		const newImgs = image?.map((v) => v?.url);
 		return {
 			name,
@@ -199,111 +206,104 @@ class UpdateProductForm extends Component {
 				battery,
 				os,
 				memory,
-				introduction,
+				introduction: introduction + '',
 			},
 		};
 	};
-	render() {
-		let {
-			name,
-			description,
-			brand,
-			category,
-			date,
-			price,
-			image,
-			quantity,
-			tempImg,
-			cpu,
-			ram,
-			screen_size,
-			color,
-			battery,
-			os,
-			memory,
-			introduction,
-		} = this.state;
-		return (
-			<div>
-				<SimpleCard>
-					<h3>Product</h3>
+	let {
+		name,
+		description,
+		brand,
+		category,
+		date,
+		price,
+		image,
+		quantity,
+		tempImg,
+		cpu,
+		ram,
+		screen_size,
+		color,
+		battery,
+		os,
+		memory,
+		introduction,
+	} = state;
+	return (
+		<div>
+			<SimpleCard>
+				<h3>Product</h3>
 
-					<ValidatorForm
-						ref="form"
-						onSubmit={this.handleSubmit}
-						onError={(errors) => null}
-					>
-						<Grid container spacing={6}>
-							<Grid item lg={6} md={6} sm={12} xs={12}>
-								<TextValidator
-									className="mb-16 w-100"
-									label="ProductName"
-									onChange={this.handleChange}
-									type="text"
-									name="name"
-									value={name}
-									validators={[
-										'required',
-										'minStringLength: 4',
-										'maxStringLength: 1000',
-									]}
-									errorMessages={['this field is required']}
-									variant="outlined"
+				<ValidatorForm onSubmit={handleSubmit} onError={(errors) => null}>
+					<Grid container spacing={6}>
+						<Grid item lg={6} md={6} sm={12} xs={12}>
+							<TextValidator
+								className="mb-16 w-100"
+								label="ProductName"
+								onChange={handleChange}
+								type="text"
+								name="name"
+								value={name}
+								validators={[
+									'required',
+									'minStringLength: 4',
+									'maxStringLength: 1000',
+								]}
+								errorMessages={['this field is required']}
+								variant="outlined"
+							/>
+							<InputLabel>Category</InputLabel>
+							<RadioGroup
+								className="mb-16"
+								value={category}
+								name="category"
+								onChange={handleChange}
+								row
+								validators={['required']}
+							>
+								<FormControlLabel
+									value="smartphone"
+									control={<Radio color="secondary" />}
+									label="Smart Phone"
+									labelPlacement="end"
 								/>
-								<InputLabel>Category</InputLabel>
-								<RadioGroup
-									className="mb-16"
-									value={category}
-									name="category"
-									onChange={this.handleChange}
-									row
-									validators={['required']}
-								>
-									<FormControlLabel
-										value="smartphone"
-										control={<Radio color="secondary" />}
-										label="Smart Phone"
-										labelPlacement="end"
-									/>
-									<FormControlLabel
-										value="laptop"
-										control={<Radio color="secondary" />}
-										label="Laptop"
-										labelPlacement="end"
-									/>
-									<FormControlLabel
-										value="tablet"
-										control={<Radio color="secondary" />}
-										label="Tablet"
-										labelPlacement="end"
-									/>
-									<FormControlLabel
-										value="accessories"
-										control={<Radio color="secondary" />}
-										label="Accessories"
-										labelPlacement="end"
-									/>
-								</RadioGroup>
-								<InputLabel>Brand</InputLabel>
-								<Select
-									validators={['required']}
-									style={{ width: '100px', height: '50px' }}
-									className="mb-16 w-50"
-									defaultValue={[brand]}
-									onChange={(v) => {
-										this.setState({
-											brand: v?.target?.value,
-										});
-									}}
-								>
-									{BRAND_LIST.map((v, i) => (
-										<MenuItem value={i}>{v}</MenuItem>
-									))}
-								</Select>
-								{/* <TextValidator
+								<FormControlLabel
+									value="laptop"
+									control={<Radio color="secondary" />}
+									label="Laptop"
+									labelPlacement="end"
+								/>
+								<FormControlLabel
+									value="tablet"
+									control={<Radio color="secondary" />}
+									label="Tablet"
+									labelPlacement="end"
+								/>
+								<FormControlLabel
+									value="accessories"
+									control={<Radio color="secondary" />}
+									label="Accessories"
+									labelPlacement="end"
+								/>
+							</RadioGroup>
+							<InputLabel>Brand</InputLabel>
+							<Select
+								validators={['required']}
+								style={{ width: '100px', height: '50px' }}
+								className="mb-16 w-50"
+								defaultValue={[brand]}
+								onChange={(v) => {
+									setState({ ...state, brand: v?.target?.value });
+								}}
+							>
+								{BRAND_LIST.map((v, i) => (
+									<MenuItem value={i}>{v}</MenuItem>
+								))}
+							</Select>
+							{/* <TextValidator
 									className="mb-16 w-100"
 									label="Brand"
-									onChange={this.handleChange}
+									onChange={handleChange}
 									type="text"
 									name="brand"
 									value={brand}
@@ -314,230 +314,230 @@ class UpdateProductForm extends Component {
 									]}
 									variant="outlined"
 								/> */}
-								{category !== 'accessories' ? (
-									<div>
-										<TextValidator
-											className="mb-16 w-100"
-											label="CPU"
-											onChange={this.handleChange}
-											type="text"
-											name="cpu"
-											value={cpu}
-											validators={['required']}
-											errorMessages={['this field is required']}
-											variant="outlined"
-										/>
-										<TextValidator
-											className="mb-16 w-100"
-											label="Ram"
-											onChange={this.handleChange}
-											type="number"
-											name="ram"
-											value={ram}
-											validators={['required']}
-											errorMessages={['this field is required']}
-											variant="outlined"
-										/>
-										<TextValidator
-											className="mb-16 w-100"
-											label="OS"
-											onChange={this.handleChange}
-											type="text"
-											name="os"
-											value={os}
-											validators={['required']}
-											errorMessages={['this field is required']}
-											variant="outlined"
-										/>
-										<TextValidator
-											className="mb-16 w-100"
-											label="Screen Size"
-											onChange={this.handleChange}
-											type="number"
-											name="screen_size"
-											value={screen_size}
-											validators={['required']}
-											errorMessages={['this field is required']}
-											variant="outlined"
-										/>
-										<TextValidator
-											className="mb-16 w-100"
-											label="Battery (mAh)"
-											onChange={this.handleChange}
-											type="number"
-											name="battery"
-											value={battery}
-											validators={['required']}
-											errorMessages={['this field is required']}
-											variant="outlined"
-										/>
-										<TextValidator
-											className="mb-16 w-100"
-											label="Memory (GB)"
-											onChange={this.handleChange}
-											type="number"
-											name="memory"
-											value={memory}
-											validators={['required']}
-											errorMessages={['this field is required']}
-											variant="outlined"
-										/>
-										<TextValidator
-											className="mb-16 w-100"
-											label="Color"
-											onChange={this.handleChange}
-											type="text"
-											name="color"
-											value={color}
-											validators={['required']}
-											errorMessages={['this field is required']}
-											variant="outlined"
-										/>
-									</div>
-								) : (
-									<div>
-										<TextValidator
-											className="mb-16 w-100"
-											label="Description"
-											onChange={this.handleChange}
-											type="text"
-											name="description"
-											value={description}
-											validators={['required']}
-											errorMessages={['this field is required']}
-											variant="outlined"
-										/>
-									</div>
-								)}
-							</Grid>
-
-							<Grid item lg={6} md={6} sm={12} xs={12}>
-								<TextValidator
-									className="mb-16 w-100"
-									label="Introduction"
-									onChange={this.handleChange}
-									type="text"
-									name="introduction"
-									value={introduction}
-									validators={['required']}
-									errorMessages={['this field is required']}
-									variant="outlined"
-								/>
-								<TextValidator
-									className="mb-16 w-100"
-									label="Price"
-									onChange={this.handleChange}
-									type="number"
-									name="price"
-									value={price}
-									validators={[
-										'required',
-										// 'minStringLength:16',
-										// 'maxStringLength: 16',
-									]}
-									errorMessages={['this field is required']}
-									variant="outlined"
-								/>
-								<TextValidator
-									className="mb-16 w-100"
-									label="Quantity"
-									onChange={this.handleChange}
-									type="number"
-									name="quantity"
-									value={quantity}
-									validators={[
-										'required',
-										// 'minStringLength:16',
-										// 'maxStringLength: 16',
-									]}
-									errorMessages={['this field is required']}
-									variant="outlined"
-								/>
-								<div
-									style={{
-										display: 'flex',
-										flexDirection: 'row',
-										justifyContent: 'space-between',
-									}}
-								>
-									<Grid className="w-100 mr-3 p-2">
-										<TextValidator
-											// className="mb-16 w-100"
-											style={{ width: '95%' }}
-											label="Image"
-											onChange={this.handleChange}
-											name="tempImg"
-											type="text"
-											value={tempImg}
-											errorMessages={[
-												'this field is required',
-												"password didn't match",
-											]}
-											variant="outlined"
-										/>
-									</Grid>
-									<Button
-										onClick={this.addImage}
-										style={{ height: 50 }}
-										color="primary"
-										variant="contained"
-									>
-										<Icon>add</Icon>
-										<span className="pl-8 capitalize">Add</span>
-									</Button>
+							{category !== 'accessories' ||
+							productInfo?.category?.id !== 4 ? (
+								<div>
+									<TextValidator
+										className="mb-16 w-100"
+										label="CPU"
+										onChange={handleChange}
+										type="text"
+										name="cpu"
+										value={cpu}
+										validators={['required']}
+										errorMessages={['this field is required']}
+										variant="outlined"
+									/>
+									<TextValidator
+										className="mb-16 w-100"
+										label="Ram"
+										onChange={handleChange}
+										type="number"
+										name="ram"
+										value={ram}
+										validators={['required']}
+										errorMessages={['this field is required']}
+										variant="outlined"
+									/>
+									<TextValidator
+										className="mb-16 w-100"
+										label="OS"
+										onChange={handleChange}
+										type="text"
+										name="os"
+										value={os}
+										validators={['required']}
+										errorMessages={['this field is required']}
+										variant="outlined"
+									/>
+									<TextValidator
+										className="mb-16 w-100"
+										label="Screen Size"
+										onChange={handleChange}
+										type="number"
+										name="screen_size"
+										value={screen_size}
+										validators={['required']}
+										errorMessages={['this field is required']}
+										variant="outlined"
+									/>
+									<TextValidator
+										className="mb-16 w-100"
+										label="Battery (mAh)"
+										onChange={handleChange}
+										type="number"
+										name="battery"
+										value={battery}
+										validators={['required']}
+										errorMessages={['this field is required']}
+										variant="outlined"
+									/>
+									<TextValidator
+										className="mb-16 w-100"
+										label="Memory (GB)"
+										onChange={handleChange}
+										type="number"
+										name="memory"
+										value={memory}
+										validators={['required']}
+										errorMessages={['this field is required']}
+										variant="outlined"
+									/>
+									<TextValidator
+										className="mb-16 w-100"
+										label="Color"
+										onChange={handleChange}
+										type="text"
+										name="color"
+										value={color}
+										validators={['required']}
+										errorMessages={['this field is required']}
+										variant="outlined"
+									/>
 								</div>
-								{this.state.image && this.state.image.length ? (
-									<Table>
-										<TableHead>
-											<TableRow>
-												<TableCell>No.</TableCell>
-												<TableCell>Image</TableCell>
-												<TableCell></TableCell>
-											</TableRow>
-										</TableHead>
-										<TableBody>
-											{this.state.image.map((v, i) => (
-												<TableRow>
-													<TableCell
-														className="px-0 capitalize"
-														align="left"
-													>
-														{i + 1}
-													</TableCell>
-													<TableCell
-														className="px-0 capitalize"
-														align="left"
-													>
-														<img src={v} width={50} height={50} />
-													</TableCell>
-													<TableCell
-														className="px-0 capitalize"
-														align="right"
-													>
-														<IconButton
-															onClick={() => this._deleteImg(v)}
-														>
-															<Icon color="error">close</Icon>
-														</IconButton>
-													</TableCell>
-												</TableRow>
-											))}
-										</TableBody>
-									</Table>
-								) : (
-									<div />
-								)}
-							</Grid>
+							) : (
+								<div>
+									{/* <TextValidator
+										className="mb-16 w-100"
+										label="Description"
+										onChange={handleChange}
+										type="text"
+										name="description"
+										value={description}
+										validators={['required']}
+										errorMessages={['this field is required']}
+										variant="outlined"
+									/> */}
+								</div>
+							)}
 						</Grid>
-						<Button color="primary" variant="contained" type="submit">
-							<Icon>send</Icon>
-							<span className="pl-8 capitalize">Update</span>
-						</Button>
-					</ValidatorForm>
-				</SimpleCard>
-			</div>
-		);
-	}
-}
+
+						<Grid item lg={6} md={6} sm={12} xs={12}>
+							<TextValidator
+								className="mb-16 w-100"
+								label="Introduction"
+								onChange={handleChange}
+								type="text"
+								name="introduction"
+								value={introduction}
+								validators={['required']}
+								errorMessages={['this field is required']}
+								variant="outlined"
+							/>
+							<TextValidator
+								className="mb-16 w-100"
+								label="Price"
+								onChange={handleChange}
+								type="number"
+								name="price"
+								value={price}
+								validators={[
+									'required',
+									// 'minStringLength:16',
+									// 'maxStringLength: 16',
+								]}
+								errorMessages={['this field is required']}
+								variant="outlined"
+							/>
+							<TextValidator
+								className="mb-16 w-100"
+								label="Quantity"
+								onChange={handleChange}
+								type="number"
+								name="quantity"
+								value={quantity}
+								validators={[
+									'required',
+									// 'minStringLength:16',
+									// 'maxStringLength: 16',
+								]}
+								errorMessages={['this field is required']}
+								variant="outlined"
+							/>
+							<div
+								style={{
+									display: 'flex',
+									flexDirection: 'row',
+									justifyContent: 'space-between',
+								}}
+							>
+								<Grid className="w-100 mr-3 p-2">
+									<TextValidator
+										// className="mb-16 w-100"
+										style={{ width: '95%' }}
+										label="Image"
+										onChange={handleChange}
+										name="tempImg"
+										type="text"
+										value={tempImg}
+										errorMessages={[
+											'this field is required',
+											"password didn't match",
+										]}
+										variant="outlined"
+									/>
+								</Grid>
+								<Button
+									onClick={addImage}
+									style={{ height: 50 }}
+									color="primary"
+									variant="contained"
+								>
+									<Icon>add</Icon>
+									<span className="pl-8 capitalize">Add</span>
+								</Button>
+							</div>
+							{state.image && state.image.length ? (
+								<Table>
+									<TableHead>
+										<TableRow>
+											<TableCell>No.</TableCell>
+											<TableCell>Image</TableCell>
+											<TableCell></TableCell>
+										</TableRow>
+									</TableHead>
+									<TableBody>
+										{state.image.map((v, i) => (
+											<TableRow>
+												<TableCell
+													className="px-0 capitalize"
+													align="left"
+												>
+													{i + 1}
+												</TableCell>
+												<TableCell
+													className="px-0 capitalize"
+													align="left"
+												>
+													<img src={v} width={50} height={50} />
+												</TableCell>
+												<TableCell
+													className="px-0 capitalize"
+													align="right"
+												>
+													<IconButton
+														onClick={() => _deleteImg(v)}
+													>
+														<Icon color="error">close</Icon>
+													</IconButton>
+												</TableCell>
+											</TableRow>
+										))}
+									</TableBody>
+								</Table>
+							) : (
+								<div />
+							)}
+						</Grid>
+					</Grid>
+					<Button color="primary" variant="contained" type="submit">
+						<Icon>send</Icon>
+						<span className="pl-8 capitalize">Update</span>
+					</Button>
+				</ValidatorForm>
+			</SimpleCard>
+		</div>
+	);
+};
 
 export default UpdateProductForm;

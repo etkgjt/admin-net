@@ -5,6 +5,7 @@ import { getAllCustomer } from 'app/redux/actions/CustomerAction';
 import { useSelector, useDispatch } from 'react-redux';
 import StateManager from 'react-select';
 import { updateAllCustonerToRedux } from '../../redux/actions/CustomerAction';
+import MyAlert from 'matx/components/MyAlert';
 
 // class CustomerList extends Component {
 // 	render() {
@@ -41,6 +42,13 @@ const CustomerList = () => {
 			console.log('all user list', data);
 			updateAllCustonerToRedux(dispatch, data);
 		} catch (err) {
+			MyAlert.show(
+				'Lỗi',
+				`${err.message}`,
+				false,
+				() => {},
+				() => {}
+			);
 			console.log('Get All user list err', err);
 		}
 	};

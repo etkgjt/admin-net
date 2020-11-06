@@ -15,7 +15,11 @@ export const addNewProduct = (product, token) =>
 				Authorization: token,
 			},
 		})
-			.then((res) => resolve(res?.data))
+			.then((res) => {
+				// if (res?.data?.status_code !== 200) reject(res.data);
+				console.log('add product success', res?.data);
+				resolve(res?.data);
+			})
 			.catch((err) => reject(err));
 	});
 export const deleteProduct = (token, product_id) =>

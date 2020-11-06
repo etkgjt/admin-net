@@ -94,7 +94,7 @@ class UpdateCustomerForm extends Component {
 			});
 		} catch (err) {
 			MySpinner.hide(() => {}, {
-				label: 'Update customer failed !',
+				label: `Update customer failed ! \n ${err.message}`,
 				value: 1,
 			});
 			console.log('add customeer err', err);

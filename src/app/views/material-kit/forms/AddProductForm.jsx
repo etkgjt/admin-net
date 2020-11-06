@@ -35,6 +35,7 @@ import {
 } from 'app/redux/actions/ProductAction';
 import MySpinner from 'matx/components/MySpinner';
 import { useDispatch, useSelector } from 'react-redux';
+import MyAlert from 'matx/components/MyAlert';
 
 const CATEGORY = {
 	smartphone: 1,
@@ -112,6 +113,7 @@ const AddProductForm = ({ token }) => {
 			console.log('all products list', data);
 			updateProductsRedux(dispatch, data);
 		} catch (err) {
+			MyAlert.show('Lỗi', `${err.message}`, false);
 			console.log('Get All product list err', err);
 		}
 	};
@@ -141,7 +143,10 @@ const AddProductForm = ({ token }) => {
 				value: 0,
 			});
 		} catch (err) {
-			MySpinner.hide(() => {}, { label: 'Add product failed !', value: 1 });
+			MySpinner.hide(() => {}, {
+				label: `Add product failed !\n ${err?.message}`,
+				value: 1,
+			});
 			console.log('send data err', err);
 		}
 	};

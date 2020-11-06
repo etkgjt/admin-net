@@ -12,6 +12,7 @@ import {
 } from 'app/redux/actions/CustomerAction';
 import { useHistory } from 'react-router-dom';
 import { CircularProgress } from '@material-ui/core';
+import MyAlert from 'matx/components/MyAlert';
 
 // class ViewCustomer extends Component {
 // 	componentDidMount() {
@@ -64,6 +65,7 @@ const ViewCustomer = ({ location }) => {
 			console.log('all user list', data);
 			updateAllCustonerToRedux(dispatch, data);
 		} catch (err) {
+			MyAlert.show('Lỗi', `${err.message}`, false);
 			console.log('Get All user list err', err);
 		}
 	};

@@ -6,6 +6,7 @@ import {
 	updateProductsRedux,
 } from '../../redux/actions/ProductAction';
 import { useDispatch, useSelector } from 'react-redux';
+import MyAlert from 'matx/components/MyAlert';
 
 const ProductList = React.memo(() => {
 	console.log('Produclist render');
@@ -30,6 +31,7 @@ const ProductList = React.memo(() => {
 			setData(data);
 			updateProductsRedux(dispatch, data);
 		} catch (err) {
+			MyAlert.show('Lỗi', `${err.message}`, false);
 			console.log('Get Product list err', err);
 		}
 	};

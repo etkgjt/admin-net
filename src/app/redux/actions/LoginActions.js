@@ -55,7 +55,10 @@ export function loginWithEmailAndPassword({ email, password }) {
 			}
 			MySpinner.hide(() => {});
 		} catch (err) {
-			MySpinner.hide();
+			MySpinner.hide(() => {}, {
+				label: `Login Failed \n ${err.message}`,
+				value: 1,
+			});
 			return dispatch({
 				type: LOGIN_ERROR,
 				payload: err,

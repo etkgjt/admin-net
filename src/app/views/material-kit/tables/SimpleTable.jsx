@@ -162,7 +162,7 @@ const SimpleTable = ({ type, data }) => {
 					});
 				} catch (err) {
 					MySpinner.hide(() => {}, {
-						label: 'Delete Failed !',
+						label: `Delete Failed ! ${err.message}`,
 						value: 1,
 					});
 					console.log('Delete pRoduct err', err);

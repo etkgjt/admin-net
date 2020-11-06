@@ -8,6 +8,7 @@ import {
 	updateProductsRedux,
 } from 'app/redux/actions/ProductAction';
 import { CircularProgress } from '@material-ui/core';
+import MyAlert from 'matx/components/MyAlert';
 
 const ViewProducts = ({ location }) => {
 	const [state, setState] = useState({});
@@ -43,6 +44,7 @@ const ViewProducts = ({ location }) => {
 			console.log('all products list', data);
 			updateProductsRedux(dispatch, data);
 		} catch (err) {
+			MyAlert.show('Lỗi', `${err.message}`, false);
 			console.log('Get All product list err', err);
 		}
 	};
@@ -58,7 +60,7 @@ const ViewProducts = ({ location }) => {
 					/>
 				</div> */}
 			<h6>ViewProducts</h6>
-			{!state || !state.id ? (
+			{!state || !state.name ? (
 				<CircularProgress />
 			) : (
 				<UpdateProductForm
