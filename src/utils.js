@@ -11,6 +11,8 @@ export const API = axios.create({
 		'Access-Control-Allow-Methods': 'GET',
 	},
 });
+export const getNumberWithDot = (x = 0) =>
+	x && x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
 
 export function debounce(func, wait, immediate) {
 	var timeout;

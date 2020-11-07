@@ -147,7 +147,7 @@ const AddProductForm = ({ token }) => {
 				label: `Add product failed !\n ${err?.message}`,
 				value: 1,
 			});
-			console.log('send data err', err);
+			console.log('send data err', err, err?.response);
 		}
 	};
 

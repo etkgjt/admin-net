@@ -20,7 +20,7 @@ export const addNewProduct = (product, token) =>
 				console.log('add product success', res?.data);
 				resolve(res?.data);
 			})
-			.catch((err) => reject(err));
+			.catch((err) => reject(err?.response?.data));
 	});
 export const deleteProduct = (token, product_id) =>
 	new Promise((resolve, reject) => {
@@ -30,7 +30,7 @@ export const deleteProduct = (token, product_id) =>
 			},
 		})
 			.then((res) => resolve(res?.data))
-			.catch((err) => reject(err));
+			.catch((err) => reject(err?.response?.data));
 	});
 export const updateProduct = (token, product_id, product_info) =>
 	new Promise((resolve, reject) => {
@@ -49,7 +49,7 @@ export const updateProduct = (token, product_id, product_info) =>
 			},
 		})
 			.then((res) => resolve(res?.data))
-			.catch((err) => reject(err));
+			.catch((err) => reject(err?.response?.data));
 	});
 
 export const updateProductsRedux = (dispatch, payload) => {

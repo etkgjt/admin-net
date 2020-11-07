@@ -54,7 +54,7 @@ const OrderList = ({ location }) => {
 					/>
 				</div> */}
 			<h4>OrderList</h4>
-			<AppTable type="order" data={subscribarList} />
+			<AppTable type="order" data={data} />
 		</div>
 	);
 };

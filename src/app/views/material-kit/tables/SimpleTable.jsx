@@ -18,6 +18,8 @@ import {
 } from 'app/redux/actions/ProductAction';
 import { useDispatch, useSelector } from 'react-redux';
 import MySpinner from 'matx/components/MySpinner';
+import moment from 'moment';
+import { getNumberWithDot } from '../../../../utils';
 
 const subscribarList = [
 	{
@@ -262,25 +264,49 @@ const SimpleTable = ({ type, data }) => {
 									</TableCell>
 								</TableRow>
 						  ))
-						: subscribarList.map((item, index) => (
+						: data.map((item, index) => (
 								<TableRow key={index}>
 									<TableCell className="px-0 capitalize" align="left">
-										Order No.
+										{item?.id}
 									</TableCell>
 									<TableCell className="px-0 capitalize" align="left">
-										Customer
+										{`${item?.customer?.first_name} ${item?.customer?.last_name}`}
 									</TableCell>
 									<TableCell className="px-0 capitalize" align="left">
-										Date
+										{`${moment(item?.date).format('YYYY-MM-DD')}`}
+									</TableCell>
+									<TableCell className="px-0 capitalize" align="left">
+										<div
+											style={{
+												padding: 5,
+												backgroundColor:
+													item?.status?.id === 1
+														? '#FFAF38'
+														: item?.status?.id === 2
+														? '#FFAF38'
+														: item?.status?.id === 3
+														? '#09B66E'
+														: '#FF3D57',
+												color:
+													item?.status?.id * 1 <= 2
+														? 'black'
+														: 'white',
+												borderRadius: 5,
+												textAlign: 'center',
+												display: 'inline-block',
+												fontSize: 10,
+											}}
+										>
+											{item?.status?.value}
+										</div>
 									</TableCell>
 									<TableCell className="px-0 capitalize">
-										Status
+										{item?.payment_method
+											? item?.payment_method
+											: 'None'}
 									</TableCell>
 									<TableCell className="px-0 capitalize">
-										Method
-									</TableCell>
-									<TableCell className="px-0 capitalize">
-										Total
+										{getNumberWithDot(item?.total)}
 									</TableCell>
 									<TableCell className="px-0" align="right">
 										<IconButton>

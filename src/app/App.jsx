@@ -23,11 +23,11 @@ const App = () => {
 					<MySpinner />
 					<MyAlert />
 					<Router history={history}>
-						<Auth>
-							<AuthGuard>
-								<MatxLayout />
-							</AuthGuard>
-						</Auth>
+						{/* <Auth>
+							<AuthGuard> */}
+						<MatxLayout />
+						{/* </AuthGuard>
+						</Auth> */}
 					</Router>
 				</MatxTheme>
 			</Provider>
