@@ -423,6 +423,7 @@ const UpdateProductForm = ({ productInfo, token }) => {
 								validators={['required']}
 								errorMessages={['this field is required']}
 								variant="outlined"
+								multiline
 							/>
 							<TextValidator
 								className="mb-16 w-100"
@@ -509,7 +510,11 @@ const UpdateProductForm = ({ productInfo, token }) => {
 													className="px-0 capitalize"
 													align="left"
 												>
-													<img src={v} width={50} height={50} />
+													<img
+														src={v?.url}
+														width={50}
+														height={50}
+													/>
 												</TableCell>
 												<TableCell
 													className="px-0 capitalize"

@@ -30,6 +30,9 @@ const OrderList = ({ location }) => {
 		if (!ordersRedux || (ordersRedux && ordersRedux.length === 0))
 			initialData();
 	}, []);
+	useEffect(() => {
+		setData(ordersRedux);
+	}, [ordersRedux]);
 	const initialData = async () => {
 		try {
 			console.log('Fetch Data ne');

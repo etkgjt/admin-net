@@ -1,4 +1,4 @@
-import React, { Component, useState } from 'react';
+import React, { Component, useEffect, useState } from 'react';
 import { Breadcrumb, SimpleCard } from 'matx';
 import SimpleForm from '../material-kit/forms/AppForm';
 import SimpleMenu from '../material-kit/menu/SimpleMenu';
@@ -14,450 +14,190 @@ import {
 	Grid,
 	TextField,
 	Button,
+	Select,
+	MenuList,
+	MenuItem,
+	CircularProgress,
 } from '@material-ui/core';
 import { getNumberWithDot } from 'utils';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import DetailsTable from 'matx/components/OrderDetailsTable';
 import { KeyboardDatePicker, DateTimePicker } from '@material-ui/pickers';
 import moment from 'moment';
 import { TextValidator, ValidatorForm } from 'react-material-ui-form-validator';
-const mockData = {
-	id: 3,
-	discount: null,
-	total: 311820000.0,
-	shipping_address: 'An Duong Vuong - Q5',
-	date: 'Sat Nov 07 2020 13:06:25 GMT+0700 (Indochina Time)',
-	note: 'Giaoaoaooaoaoaoa',
-	payment_method: null,
-	status: {
-		id: 3,
-		value: 'Thành công',
-	},
-	customer: {
-		id: 1,
-		username: 'admin@gmail.com',
-		first_name: 'Luan',
-		last_name: 'Vo Minh',
-		address: 'An Duong Vuong - Q5',
-		phone_number: '0869089089',
-		gender: 2,
-		role: {
-			name: 'ADMIN',
-		},
-	},
-	orderDetails: [
-		{
-			product: {
-				id: 33,
-				name: ' Iphone 11 64GB màu vàng',
-				price: 19990000.0,
-				stock: 20,
-			},
-			quantity: 2,
-		},
-		{
-			product: {
-				id: 49,
-				name: 'Iphone 8 Plus 128GB màu xám',
-				price: 14990000.0,
-				stock: 25,
-			},
-			quantity: 2,
-		},
-		{
-			product: {
-				id: 69,
-				name: 'Samsung Galaxy Note 10+ màu đen',
-				price: 16490000.0,
-				stock: 25,
-			},
-			quantity: 2,
-		},
-		{
-			product: {
-				id: 32,
-				name: ' Iphone 11 64GB màu xanh lá',
-				price: 19990000.0,
-				stock: 20,
-			},
-			quantity: 2,
-		},
-		{
-			product: {
-				id: 68,
-				name: 'Samsung Galaxy Note 10+ màu bạc',
-				price: 16490000.0,
-				stock: 25,
-			},
-			quantity: 2,
-		},
-		{
-			product: {
-				id: 50,
-				name: 'Iphone 8 Plus 128GB màu vàng',
-				price: 14990000.0,
-				stock: 25,
-			},
-			quantity: 4,
-		},
-		{
-			product: {
-				id: 31,
-				name: ' Iphone 11 64GB màu đỏ',
-				price: 19990000.0,
-				stock: 201,
-			},
-			quantity: 2,
-		},
-		{
-			product: {
-				id: 47,
-				name: 'Iphone Xs  64GB màu xám',
-				price: 17990000.0,
-				stock: 50,
-			},
-			quantity: 2,
-		},
-	],
-};
+import {
+	getOrderList,
+	updateOrder,
+	updateOrdersRedux,
+} from '../../redux/actions/OrderAction';
+import MySpinner from 'matx/components/MySpinner';
+import { useHistory } from 'react-router-dom';
+import MyAlert from 'matx/components/MyAlert';
+import EditInvoice from './EditInvoice';
+import ViewInvoice from './ViewInvoice';
 
-const ViewOrder = () => {
-	const [isEdit, setIsEdit] = useState(true);
+const ViewOrder = ({ location }) => {
+	const dispatch = useDispatch();
+
+	const [isEdit, setIsEdit] = useState(false);
+	const { token } = useSelector((state) => state.user);
+	const [stateId, setStateId] = useState(
+		location?.state?.orderId ? location?.state?.orderId : 1
+	);
+	const orderListRedux = useSelector((state) => state?.orderReducer?.orders);
+
+	useEffect(() => {
+		if (orderListRedux || !orderListRedux.length) {
+			initialData();
+		}
+	}, []);
+
+	useEffect(() => {
+		if (stateId && orderListRedux && orderListRedux.length)
+			setState([...orderListRedux].find((v) => v?.id === stateId));
+	}, [stateId, orderListRedux]);
+
+	const [state, setState] = useState(
+		[...orderListRedux].find((v) => v?.id === stateId)
+	);
+
+	const _changeMode = () => setIsEdit(!isEdit);
+
+	const initialData = async () => {
+		try {
+			console.log('Fetch Data ne');
+			const data = await getOrderList(token);
+
+			updateOrdersRedux(dispatch, data);
+		} catch (err) {
+			MyAlert.show('Lỗi', `${err.message}`, false);
+			console.log('Get Product list err', err);
+		}
+	};
+	const convertOrderData = (data) => {
+		const {
+			date,
+			first_name,
+			last_name,
+			note,
+			details,
+			payment_method,
+			phone_number,
+			shipping_address,
+			status,
+			username,
+			user_id,
+		} = data;
+		const newArr = [...details].map((v) => ({
+			product_id: v?.product?.id,
+			quantity: v?.quantity,
+		}));
+		const total = [...details].reduce(
+			(x, y) => (x += y?.quantity * y?.product?.price),
+			0
+		);
+		return {
+			user_id,
+			shipping_address,
+			method: payment_method,
+			buying_date: date,
+			note,
+			status,
+			total,
+			details: newArr,
+			discount: 0,
+		};
+	};
+	const _handleSubmit = async (data) => {
+		try {
+			MySpinner.show();
+			console.log('data', data);
+
+			const newData = convertOrderData(data);
+
+			console.log('new data', newData);
+			const jsonData = JSON.stringify(newData);
+
+			console.log('Jsondata', jsonData);
+			const res = await updateOrder(token, state?.id, jsonData);
+			console.log('res ne', res);
+
+			const newState = {
+				id: state?.id,
+				discount: data?.discount,
+				total: [...data?.details].reduce(
+					(x, y) => (x += y?.quantity * y?.product?.price),
+					0
+				),
+				shipping_address: data?.shipping_address,
+				date: data?.date,
+				note: data?.note,
+				payment_method: data?.payment_method,
+				status: {
+					id: data?.status,
+					value:
+						data?.status === 1
+							? 'Đang xử lý'
+							: data?.status === 2
+							? 'Đang giao'
+							: data?.status === 3
+							? 'Đã nhận hàng'
+							: 'Đã bị huỷ',
+				},
+				customer: {
+					id: data?.user_id,
+					username: data?.username,
+					first_name: data?.first_name,
+					last_name: data?.last_name,
+					address: data?.shipping_address,
+					phone_number: data?.phone_number,
+				},
+				details: [...data?.details],
+			};
+
+			const newList = [...orderListRedux];
+			const changedItemIndex = newList.findIndex((v) => v?.id === stateId);
+			newList.splice(changedItemIndex, 1, newState);
+			updateOrdersRedux(dispatch, newList);
+			setState(newState);
+
+			MySpinner.hide(() => {}, {
+				label: 'Update Success',
+				value: 0,
+			});
+			_changeMode();
+		} catch (err) {
+			MySpinner.hide(() => {}, {
+				label: 'Update Order Info Failed',
+				value: 1,
+			});
+			console.log('Update orderinfo err', err);
+		}
+	};
+	console.log('state data ne', state, stateId);
 	return (
 		<div className="m-sm-30">
-			<h6>ViewOrder</h6>
-			{isEdit ? (
-				<EditInvoice data={mockData} />
+			{orderListRedux && orderListRedux.length ? (
+				isEdit ? (
+					<EditInvoice
+						data={state}
+						onCancelPress={_changeMode}
+						onSubmitDone={(v) => _handleSubmit(v)}
+					/>
+				) : (
+					<ViewInvoice
+						data={state && state?.details ? state : {}}
+						onEditPress={_changeMode}
+					/>
+				)
 			) : (
-				<ViewInvoice data={mockData} />
+				<CircularProgress />
 			)}
-		</div>
-	);
-};
-const EditInvoice = ({ data }) => {
-	const {
-		id,
-		shipping_address,
-		date,
-		note,
-		payment_method,
-		status,
-		customer,
-		orderDetails,
-	} = data;
-	const [state, setState] = useState({
-		date: date ? date : moment().format('YYYY-MM-DD'),
-		shipping_address: customer?.shipping_address
-			? customer.shipping_address
-			: '',
-		note: note || '',
-		payment_method: payment_method || 1,
-		orderDetails: orderDetails || [],
-		status: status || { id: 1, value: 'AAA' },
-		phone_number: customer?.phone_number || '',
-		username: customer?.username || '',
-		first_name: customer?.first_name || '',
-		last_name: customer?.last_name || '',
-	});
-
-	const _handleSubmit = () => {};
-	const _handleChange = (e) => {
-		e.persist();
-		console.log('firstname', state?.first_name);
-		setState({ ...state, [e.target.name]: e.target.value });
-	};
-	console.log('data ne', orderDetails);
-	return (
-		<div>
-			<h6>Edit Invoice</h6>
-
-			<ValidatorForm onSubmit={_handleSubmit}>
-				<Grid
-					style={{
-						display: 'flex',
-						flexDirection: 'column',
-						alignItems: 'flex-end',
-						justifyContent: 'space-around',
-						paddingBottom: 10,
-					}}
-				>
-					<Button color="primary" variant="contained" type="submit">
-						<Icon>save</Icon>
-						<span className="pl-8 capitalize">Save</span>
-					</Button>
-				</Grid>
-				<Grid container spacing={6}>
-					<Grid item lg={6} md={6} sm={12} xs={12}>
-						<SimpleCard>
-							<h6>Customer Info</h6>
-
-							<TextValidator
-								className="mb-16 w-100"
-								value={state?.first_name}
-								name="first_name"
-								label="First Name"
-								type="text"
-								validators={[
-									'required',
-									'minStringLength: 4',
-									'maxStringLength: 20',
-								]}
-								onChange={_handleChange}
-							/>
-
-							<TextValidator
-								className="mb-16 w-100"
-								value={state?.last_name}
-								name="last_name"
-								label="Last Name"
-								type="text"
-								validators={[
-									'required',
-									'minStringLength: 4',
-									'maxStringLength: 20',
-								]}
-								onChange={_handleChange}
-							/>
-							<TextValidator
-								className="mb-16 w-100"
-								value={state?.phone_number}
-								name="phone_number"
-								label="Phone Number"
-								type="text"
-								validators={[
-									'required',
-									'minStringLength: 4',
-									'maxStringLength: 20',
-								]}
-								onChange={_handleChange}
-							/>
-							<TextValidator
-								className="mb-16 w-100"
-								value={state?.username}
-								name="username"
-								label="Email"
-								type="text"
-								validators={[
-									'required',
-									'minStringLength: 4',
-									'maxStringLength: 20',
-									'isEmail',
-								]}
-								onChange={_handleChange}
-							/>
-						</SimpleCard>
-					</Grid>
-					<Grid item lg={6} md={6} sm={12} xs={12}>
-						<SimpleCard>
-							<h6>Invoice Info</h6>
-							<div
-								style={{
-									display: 'flex',
-									justifyContent: 'space-between',
-									margin: 0,
-									padding: 0,
-								}}
-							>
-								<p style={{ fontWeight: 'bold' }}>Invoice No.</p>
-								<p>#{id}</p>
-							</div>
-							<div
-								style={{
-									display: 'flex',
-									justifyContent: 'space-between',
-									margin: 0,
-									padding: 0,
-								}}
-							>
-								<p style={{ fontWeight: 'bold' }}>Status:</p>
-								<p>{status?.value}</p>
-							</div>
-							<div
-								style={{
-									display: 'flex',
-									justifyContent: 'space-between',
-									margin: 0,
-									padding: 0,
-								}}
-							>
-								<p style={{ fontWeight: 'bold' }}>Date:</p>
-								<TextValidator
-									id="date"
-									label="Birthday"
-									type="date"
-									name="date"
-									defaultValue={moment(state?.date).format(
-										'YYYY-MM-DD'
-									)}
-									InputLabelProps={{
-										shrink: true,
-									}}
-									onChange={_handleChange}
-								/>
-							</div>
-							<div
-								style={{
-									display: 'flex',
-									justifyContent: 'space-between',
-									margin: 0,
-									padding: 0,
-								}}
-							>
-								<p style={{ fontWeight: 'bold' }}>Payment method:</p>
-								<p>{payment_method ? payment_method : 'None'}</p>
-							</div>
-							<div
-								style={{
-									display: 'flex',
-									justifyContent: 'space-between',
-									margin: 0,
-									padding: 0,
-								}}
-							>
-								<p style={{ fontWeight: 'bold' }}>Address:</p>
-								<p>{shipping_address}</p>
-							</div>
-						</SimpleCard>
-					</Grid>
-				</Grid>
-			</ValidatorForm>
-			<Grid container spacing={6}>
-				<Grid item lg={12} md={12} sm={12} xs={12}>
-					<SimpleCard>
-						<DetailsTable type="edit" data={orderDetails} />
-					</SimpleCard>
-				</Grid>
-			</Grid>
-		</div>
-	);
-};
-const ViewInvoice = ({ data }) => {
-	const {
-		id,
-		shipping_address,
-		date,
-		note,
-		payment_method,
-		status,
-		customer,
-		orderDetails,
-	} = data;
-	console.log('data ne', orderDetails);
-	return (
-		<div>
-			<h6>View Invoice</h6>
-
-			<Grid container spacing={6}>
-				<Grid item lg={6} md={6} sm={12} xs={12}>
-					<SimpleCard>
-						<h6>Customer Info</h6>
-						<div
-							style={{
-								display: 'flex',
-								justifyContent: 'space-between',
-								alignItems: 'flex-start',
-								margin: 0,
-								padding: 0,
-							}}
-						>
-							<p style={{ fontWeight: 'bold' }}>Name</p>
-							<p>{`${customer?.first_name} ${customer?.last_name}`}</p>
-						</div>
-
-						<div
-							style={{
-								display: 'flex',
-								justifyContent: 'space-between',
-								margin: 0,
-								padding: 0,
-							}}
-						>
-							<p style={{ fontWeight: 'bold' }}>Phone number:</p>
-							<p>{`${customer?.phone_number}`}</p>
-						</div>
-						<div
-							style={{
-								display: 'flex',
-								justifyContent: 'space-between',
-								margin: 0,
-								padding: 0,
-							}}
-						>
-							<p style={{ fontWeight: 'bold' }}>Email:</p>
-							<p>{customer?.username}</p>
-						</div>
-					</SimpleCard>
-				</Grid>
-				<Grid item lg={6} md={6} sm={12} xs={12}>
-					<SimpleCard>
-						<h6>Invoice Info</h6>
-						<div
-							style={{
-								display: 'flex',
-								justifyContent: 'space-between',
-								margin: 0,
-								padding: 0,
-							}}
-						>
-							<p style={{ fontWeight: 'bold' }}>Invoice No.</p>
-							<p>#{id}</p>
-						</div>
-						<div
-							style={{
-								display: 'flex',
-								justifyContent: 'space-between',
-								margin: 0,
-								padding: 0,
-							}}
-						>
-							<p style={{ fontWeight: 'bold' }}>Status:</p>
-							<p>{status?.value}</p>
-						</div>
-						<div
-							style={{
-								display: 'flex',
-								justifyContent: 'space-between',
-								margin: 0,
-								padding: 0,
-							}}
-						>
-							<p style={{ fontWeight: 'bold' }}>Date:</p>
-							<p>{date}</p>
-						</div>
-						<div
-							style={{
-								display: 'flex',
-								justifyContent: 'space-between',
-								margin: 0,
-								padding: 0,
-							}}
-						>
-							<p style={{ fontWeight: 'bold' }}>Payment method:</p>
-							<p>{payment_method ? payment_method : 'None'}</p>
-						</div>
-						<div
-							style={{
-								display: 'flex',
-								justifyContent: 'space-between',
-								margin: 0,
-								padding: 0,
-							}}
-						>
-							<p style={{ fontWeight: 'bold' }}>Address:</p>
-							<p>{shipping_address}</p>
-						</div>
-					</SimpleCard>
-				</Grid>
-			</Grid>
-			<Grid container spacing={6}>
-				<Grid item lg={12} md={12} sm={12} xs={12}>
-					<SimpleCard>
-						<DetailsTable type="view" data={orderDetails} />
-					</SimpleCard>
-				</Grid>
-			</Grid>
 		</div>
 	);
 };
 
 export default ViewOrder;
+{
+	/* <ViewInvoice data = {state} onCancelPress={_changeMode} /> */
+}

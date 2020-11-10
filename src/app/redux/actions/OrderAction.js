@@ -9,7 +9,7 @@ export const getOrderList = (token) =>
 			},
 		})
 			.then((res) => resolve(res?.data))
-			.catch((err) => reject(err));
+			.catch((err) => reject(err?.response?.data));
 	});
 export const updateOrder = (token, orderId, orderInfo) =>
 	new Promise((resolve, reject) => {
@@ -19,7 +19,7 @@ export const updateOrder = (token, orderId, orderInfo) =>
 			},
 		})
 			.then((res) => resolve(res?.data))
-			.catch((err) => reject(err));
+			.catch((err) => reject(err?.response?.data));
 	});
 export const updateOrdersRedux = (dispatch, orders) => {
 	dispatch({
@@ -27,3 +27,13 @@ export const updateOrdersRedux = (dispatch, orders) => {
 		payload: orders,
 	});
 };
+export const updateOrderStatus = (token, status, orderId) =>
+	new Promise((resolve, reject) => {
+		API.put(`/order/status/${orderId}`, status, {
+			headers: {
+				Authorization: token,
+			},
+		})
+			.then((res) => resolve(res))
+			.catch((err) => reject(err?.response?.data));
+	});

@@ -1,14 +1,14 @@
 import {
-    Icon,
-    IconButton,
+	Icon,
+	IconButton,
 	Table,
 	TableBody,
 	TableCell,
 	TableHead,
 	TableRow,
-    TextField,
+	TextField,
 } from '@material-ui/core';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getNumberWithDot } from 'utils';
 
 const tableHeader = [
@@ -84,8 +84,16 @@ const editTableHeader = [
 	},
 ];
 
-const DetailsTable = ({ type = 'view', data = [] }) => {
-	const [state, setState] = useState(data ? data : []);
+const DetailsTable = ({
+	type = 'view',
+	data = [],
+	onChangeData = () => {},
+}) => {
+	const [state, setState] = useState(data ?? data);
+	useEffect(() => {
+		onChangeData(state);
+		// console.log('state change');
+	}, [state]);
 	const _handleChange = (val, idx) => {
 		if (val >= 1) {
 			let newItem = [...state]?.[idx];
