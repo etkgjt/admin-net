@@ -81,20 +81,24 @@ class Layout1Topbar extends Component {
 									onClick={this.handleSidebarToggle}
 									className="hide-on-lg"
 								>
-									<Icon>menu</Icon>
+									<Icon style={{ color: 'white' }}>menu</Icon>
 								</IconButton>
 
 								<div className="hide-on-mobile">
 									<IconButton>
-										<Icon>mail_outline</Icon>
+										<Icon style={{ color: 'white' }}>
+											mail_outline
+										</Icon>
 									</IconButton>
 
 									<IconButton>
-										<Icon>web_asset</Icon>
+										<Icon style={{ color: 'white' }}>web_asset</Icon>
 									</IconButton>
 
 									<IconButton>
-										<Icon>star_outline</Icon>
+										<Icon style={{ color: 'white' }}>
+											star_outline
+										</Icon>
 									</IconButton>
 								</div>
 							</div>
@@ -114,7 +118,7 @@ class Layout1Topbar extends Component {
 								>
 									<MenuItem style={{ minWidth: 185 }}>
 										<Link className="flex flex-middle" to="/">
-											<Icon> home </Icon>
+											<Icon style={{ color: 'white' }}> home </Icon>
 											<span className="pl-16"> Home </span>
 										</Link>
 									</MenuItem>
@@ -123,7 +127,10 @@ class Layout1Topbar extends Component {
 											className="flex flex-middle"
 											to="/page-layouts/user-profile"
 										>
-											<Icon> person </Icon>
+											<Icon style={{ color: 'white' }}>
+												{' '}
+												person{' '}
+											</Icon>
 											<span className="pl-16"> Profile </span>
 										</Link>
 									</MenuItem>
@@ -131,7 +138,7 @@ class Layout1Topbar extends Component {
 										className="flex flex-middle"
 										style={{ minWidth: 185 }}
 									>
-										<Icon> settings </Icon>
+										<Icon style={{ color: 'white' }}> settings </Icon>
 										<span className="pl-16"> Settings </span>
 									</MenuItem>
 									<MenuItem
@@ -139,7 +146,10 @@ class Layout1Topbar extends Component {
 										className="flex flex-middle"
 										style={{ minWidth: 185 }}
 									>
-										<Icon> power_settings_new </Icon>
+										<Icon style={{ color: 'white' }}>
+											{' '}
+											power_settings_new{' '}
+										</Icon>
 										<span className="pl-16"> Logout </span>
 									</MenuItem>
 								</MatxMenu>

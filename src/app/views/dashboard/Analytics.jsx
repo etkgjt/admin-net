@@ -104,7 +104,7 @@ const LineChart = () => {
 			<Select
 				style={{
 					width: 90,
-					backgroundColor: '#8E84F3',
+					backgroundColor: '#6BA5F9',
 					padding: 5,
 					color: 'white',
 				}}

@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactEcharts from 'echarts-for-react';
+import echarts from 'echarts';
 import { merge } from 'lodash';
 
 const defaultOption = {
@@ -84,26 +85,31 @@ const defaultOption = {
 			show: false,
 		},
 	},
-	color: [
-		{
-			type: 'linear',
-			x: 0,
-			y: 0,
-			x2: 0,
-			y2: 1,
-			colorStops: [
-				{
-					offset: 0,
-					color: 'rgba(255,255,255,0.3)', // color at 0% position
-				},
-				{
-					offset: 1,
-					color: 'rgba(255,255,255,0)', // color at 100% position
-				},
-			],
-			global: false, // false by default
-		},
-	],
+	color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+		{ offset: 1, color: '#3366FF' },
+		{ offset: 0.7, color: '#83bff6' },
+		{ offset: 0, color: '#83bff6' },
+	]),
+	// color: [
+	// 	{
+	// 		type: 'linear',
+	// 		x: 0,
+	// 		y: 0,
+	// 		x2: 0,
+	// 		y2: 1,
+	// 		colorStops: [
+	// 			{
+	// 				offset: 0,
+	// 				color: 'rgba(255,255,255,0.3)', // color at 0% position
+	// 			},
+	// 			{
+	// 				offset: 1,
+	// 				color: 'rgba(255,255,255,0)', // color at 100% position
+	// 			},
+	// 		],
+	// 		global: false, // false by default
+	// 	},
+	// ],
 };
 
 const ModifiedAreaChart = ({ height, option }) => {
