@@ -8,6 +8,8 @@ import EcommerceReducer from './EcommerceReducer';
 import productReducer from './ProductsReducer';
 import customerReducer from './CustomerReducer';
 import orderReducer from './OrderReducer';
+import statisticReducer from './StatisticReducer';
+import contactReducer from './ContactReducer';
 
 const RootReducer = combineReducers({
 	login: LoginReducer,
@@ -19,6 +21,8 @@ const RootReducer = combineReducers({
 	productReducer,
 	customerReducer,
 	orderReducer,
+	statisticReducer,
+	contactReducer,
 });
 
 export default RootReducer;

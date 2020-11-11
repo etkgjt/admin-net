@@ -1,119 +1,140 @@
-import React, { Component } from "react";
+import React, { Component } from 'react';
 import {
-  Card,
-  Icon,
-  IconButton,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody
-} from "@material-ui/core";
+	Card,
+	Icon,
+	IconButton,
+	Table,
+	TableHead,
+	TableRow,
+	TableCell,
+	TableBody,
+} from '@material-ui/core';
 
 const TableCard = () => {
-  const productList = [
-    {
-      imgUrl: "/assets/images/products/headphone-2.jpg",
-      name: "earphone",
-      price: 100,
-      available: 15
-    },
-    {
-      imgUrl: "/assets/images/products/headphone-3.jpg",
-      name: "earphone",
-      price: 1500,
-      available: 30
-    },
-    {
-      imgUrl: "/assets/images/products/iphone-2.jpg",
-      name: "iPhone x",
-      price: 1900,
-      available: 35
-    },
-    {
-      imgUrl: "/assets/images/products/iphone-1.jpg",
-      name: "iPhone x",
-      price: 100,
-      available: 0
-    },
-    {
-      imgUrl: "/assets/images/products/headphone-3.jpg",
-      name: "Head phone",
-      price: 1190,
-      available: 5
-    }
-  ];
+	const productList = [
+		{
+			name: 'Iphone 7 plus',
+			buying_times: 20,
+			price: 100,
+			rating: 4.9,
+			image: '/assets/images/products/headphone-3.jpg',
+		},
+		{
+			name: 'Iphone 9 plus',
+			buying_times: 19,
+			price: 99,
+			rating: 4.2,
+			image: '/assets/images/products/headphone-2.jpg',
+		},
+		{
+			name: 'Iphone 8 plus',
+			buying_times: 18,
+			price: 98,
+			rating: 4.3,
+			image: '/assets/images/products/headphone-3.jpg',
+		},
+		{
+			name: 'Iphone 10 plus',
+			buying_times: 17,
+			price: 97,
+			rating: 4.4,
+			image: '/assets/images/products/iphone-2.jpg',
+		},
+		{
+			name: 'Iphone 11 plus',
+			buying_times: 16,
+			price: 96,
+			rating: 4.1,
+			image: '/assets/images/products/headphone-3.jpg',
+		},
+		{
+			name: 'Iphone 23 plus',
+			buying_times: 15,
+			price: 95,
+			rating: 4.5,
+			image: '/assets/images/products/iphone-1.jpg',
+		},
+		{
+			name: 'Iphone 1 plus',
+			buying_times: 14,
+			price: 94,
+			rating: 4.8,
+			image: '/assets/images/products/headphone-3.jpg',
+		},
+	];
 
-  return (
-    <Card elevation={3} className="pt-20 mb-24">
-      <div className="card-title px-24 mb-12">top selling products</div>
-      <div className="overflow-auto">
-        <Table className="product-table">
-          <TableHead>
-            <TableRow>
-              <TableCell className="px-24" colSpan={4}>
-                Name
-              </TableCell>
-              <TableCell className="px-0" colSpan={2}>
-                Revenue
-              </TableCell>
-              <TableCell className="px-0" colSpan={2}>
-                Stock Status
-              </TableCell>
-              <TableCell className="px-0" colSpan={1}>
-                Action
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {productList.map((product, index) => (
-              <TableRow key={index}>
-                <TableCell className="px-0 capitalize" colSpan={4} align="left">
-                  <div className="flex flex-middle">
-                    <img
-                      className="circular-image-small"
-                      src={product.imgUrl}
-                      alt="user"
-                    />
-                    <p className="m-0 ml-8">{product.name}</p>
-                  </div>
-                </TableCell>
-                <TableCell className="px-0 capitalize" align="left" colSpan={2}>
-                  $
-                  {product.price > 999
-                    ? (product.price / 1000).toFixed(1) + "k"
-                    : product.price}
-                </TableCell>
-
-                <TableCell className="px-0" align="left" colSpan={2}>
-                  {product.available ? (
-                    product.available < 20 ? (
-                      <small className="border-radius-4 bg-secondary text-white px-8 py-2 ">
-                        {product.available} available
-                      </small>
-                    ) : (
-                      <small className="border-radius-4 bg-primary text-white px-8 py-2 ">
-                        in stock
-                      </small>
-                    )
-                  ) : (
-                    <small className="border-radius-4 bg-error text-white px-8 py-2 ">
-                      out of stock
-                    </small>
-                  )}
-                </TableCell>
-                <TableCell className="px-0" colSpan={1}>
-                  <IconButton>
-                    <Icon color="primary">edit</Icon>
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-    </Card>
-  );
+	return (
+		<Card elevation={3} className="pt-20 mb-24">
+			<div className="card-title px-24 mb-12">top selling products</div>
+			<div className="overflow-auto">
+				<Table className="product-table">
+					<TableHead>
+						<TableRow>
+							<TableCell className="px-24" colSpan={4}>
+								Name
+							</TableCell>
+							<TableCell className="px-0" colSpan={2} align="center">
+								Buying Times
+							</TableCell>
+							<TableCell className="px-0" colSpan={2} align="center">
+								Revenue
+							</TableCell>
+							<TableCell className="px-0" colSpan={1} align="center">
+								Rating
+							</TableCell>
+						</TableRow>
+					</TableHead>
+					<TableBody>
+						{productList.map((product, index) => (
+							<TableRow key={index}>
+								<TableCell
+									className="px-0 capitalize"
+									colSpan={4}
+									align="left"
+								>
+									<div className="flex flex-middle">
+										<img
+											className="circular-image-small"
+											src={product.image}
+											alt="user"
+										/>
+										<p className="m-0 ml-8">{product.name}</p>
+									</div>
+								</TableCell>
+								<TableCell
+									className="px-0 capitalize"
+									colSpan={2}
+									align="center"
+								>
+									{product?.buying_times}
+								</TableCell>
+								<TableCell
+									className="px-0 capitalize"
+									align="center"
+									colSpan={2}
+								>
+									$
+									{product.price * product.buying_times > 999
+										? (
+												(product.price * product.buying_times) /
+												1000
+										  ).toFixed(1) + 'k'
+										: product.price * product.buying_times}
+								</TableCell>
+								<TableCell
+									className="px-0 capitalize"
+									align="center"
+									colSpan={1}
+								>
+									{product?.rating}
+								</TableCell>
+							</TableRow>
+						))}
+					</TableBody>
+				</Table>
+			</div>
+		</Card>
+	);
 };
 
 export default TableCard;
