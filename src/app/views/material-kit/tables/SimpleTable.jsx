@@ -136,6 +136,7 @@ const tableHeading = {
 	customer: ['Name', 'Email', 'Address', 'Phone Number', ''],
 	product: ['Name', 'Description', 'Inventory', 'Price', ''],
 	order: ['Order No.', 'Customer', 'Date', 'Status', 'Method', 'Total', ''],
+	contact: ['Message No.', 'Email', 'Phone Number', 'Message', 'Date', ''],
 };
 
 const SimpleTable = ({ type, data }) => {
@@ -147,6 +148,9 @@ const SimpleTable = ({ type, data }) => {
 	};
 	const _handleEditProduct = (info) => {
 		history.push('/product/view-product', { data: info });
+	};
+	const _handleReplyClick = (message) => {
+		history.push('/contact/view-message', { data: message });
 	};
 	const _handleDeleteProduct = (productId) => {
 		MyAlert.show(
@@ -201,6 +205,16 @@ const SimpleTable = ({ type, data }) => {
 							: type === 'product'
 							? tableHeading?.product?.map((v, i) => (
 									<TableCell className="px-0" key={`${i}-${v}`}>
+										{v}
+									</TableCell>
+							  ))
+							: type === 'contact'
+							? tableHeading?.contact?.map((v, i) => (
+									<TableCell
+										className="px-0"
+										key={`${i}-${v}`}
+										align="left"
+									>
 										{v}
 									</TableCell>
 							  ))
@@ -296,6 +310,62 @@ const SimpleTable = ({ type, data }) => {
 											onClick={() => _handleDeleteProduct(item?.id)}
 										>
 											<Icon color="error">close</Icon>
+										</IconButton>
+									</TableCell>
+								</TableRow>
+						  ))
+						: type === 'contact'
+						? data?.map((v, i) => (
+								<TableRow key={`${v?.email}-${v?.phone}`}>
+									<TableCell className="px-0 capitalize" align="left">
+										{`#${i}`}
+									</TableCell>
+									<TableCell className="px-0 capitalize" align="left">
+										{v?.email}
+									</TableCell>
+									<TableCell className="px-0 capitalize" align="left">
+										{v?.phone}
+									</TableCell>
+
+									<TableCell className="px-0 pr-5" align="left">
+										<div
+											style={{
+												overflow: 'hidden',
+												textOverflow: 'ellipsis',
+												maxHeight: 30,
+												display: 'block',
+												lineHeight: '1.8em',
+												wordWrap: 'break-word',
+											}}
+										>
+											{v?.message}
+										</div>
+									</TableCell>
+									<TableCell
+										className="px-0 capitalize"
+										size="small"
+										align="left"
+									>
+										{v?.date}
+									</TableCell>
+									<TableCell
+										className="px-0 capitalize"
+										size="small"
+										align="right"
+									>
+										<IconButton
+											onClick={() => _handleReplyClick(v)}
+											disabled={v?.reply}
+										>
+											<Icon
+												style={{
+													color: !v?.reply
+														? '#09B66E'
+														: '#625E80',
+												}}
+											>
+												reply
+											</Icon>
 										</IconButton>
 									</TableCell>
 								</TableRow>

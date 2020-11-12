@@ -64,7 +64,7 @@ const defaultOption = {
 	yAxis: {
 		type: 'value',
 		min: 0,
-		max: 9999,
+		max: 99,
 		axisLabel: {
 			color: '#ccc',
 			margin: 20,
@@ -114,10 +114,12 @@ const defaultOption = {
 
 const ModifiedAreaChart = ({ height, option }) => {
 	return (
-		<ReactEcharts
-			style={{ height: height }}
-			option={merge({}, defaultOption, option)}
-		/>
+		<div>
+			<ReactEcharts
+				style={{ height: height }}
+				option={merge({}, defaultOption, option)}
+			/>
+		</div>
 	);
 };
 

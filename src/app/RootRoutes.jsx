@@ -16,6 +16,7 @@ import OrderRoutes from './views/order/OrderRoutes';
 import ProductRoutes from './views/product/ProductRoutes';
 import OrderList from './views/order/OrderList';
 import ViewOrder from './views/order/ViewOrder';
+import ContactRoutes from './views/contact/ContactRoutes';
 
 const redirectRoute = [
 	{
@@ -44,6 +45,7 @@ const routes = [
 	...CustomerRoutes,
 	...OrderRoutes,
 	...ProductRoutes,
+	...ContactRoutes,
 ];
 
 export default routes;

@@ -11,17 +11,17 @@ export const navigations = [
 			{
 				name: 'New Customer',
 				path: '/customer/new-customer',
-				iconText: 'B',
+				iconText: 'C',
 			},
 			{
 				name: 'Customer List',
 				path: '/customer/customer-list',
-				iconText: 'E',
+				iconText: 'CL',
 			},
 			{
 				name: 'View Customer',
 				path: '/customer/view-customer',
-				iconText: 'E',
+				iconText: 'EC',
 			},
 		],
 	},
@@ -32,17 +32,17 @@ export const navigations = [
 			{
 				name: 'New Product',
 				path: '/product/new-product',
-				iconText: 'B',
+				iconText: 'CP',
 			},
 			{
 				name: 'Product List',
 				path: '/product/product-list',
-				iconText: 'E',
+				iconText: 'CL',
 			},
 			{
 				name: 'View Product',
 				path: '/product/view-product',
-				iconText: 'E',
+				iconText: 'EP',
 			},
 		],
 	},
@@ -53,12 +53,28 @@ export const navigations = [
 			{
 				name: 'Order List',
 				path: '/order/order-list',
-				iconText: 'E',
+				iconText: 'OL',
 			},
 			{
 				name: 'View Order',
 				path: '/order/view-order',
-				iconText: 'E',
+				iconText: 'EO',
+			},
+		],
+	},
+	{
+		name: 'Contact',
+		icon: 'message',
+		children: [
+			{
+				name: 'Message List',
+				path: '/contact/message-list',
+				iconText: 'ML',
+			},
+			{
+				name: 'View Message',
+				path: '/contact/view-message',
+				iconText: 'EM',
 			},
 		],
 	},
@@ -66,31 +82,5 @@ export const navigations = [
 		name: 'Sign Out',
 		icon: 'meeting_room',
 		path: '/others/drag-and-drop',
-	},
-	{
-		name: 'Sessions',
-		icon: 'trending_up',
-		children: [
-			{
-				name: 'Sign in',
-				iconText: 'SI',
-				path: '/session/signin',
-			},
-			{
-				name: 'Sign up',
-				iconText: 'SU',
-				path: '/session/signup',
-			},
-			{
-				name: 'Forgot password',
-				iconText: 'FP',
-				path: '/session/forgot-password',
-			},
-			{
-				name: 'Error',
-				iconText: '404',
-				path: '/session/404',
-			},
-		],
 	},
 ];

@@ -217,13 +217,15 @@ const AppTable = ({ type, data }) => {
 			</div>
 			<SimpleCard
 				title={
-					type === 'order'
+					type === 'contact'
+						? 'All Message'
+						: 'order'
 						? 'All Orders'
 						: type === 'product'
 						? 'All Products'
 						: 'All Customers'
 				}
-				controlGroup
+				controlGroup={type !== 'contact' ? true : false}
 				onSearch={(v) => _handleSearch(v)}
 				onCSVPress={_handleToCSV}
 				csvData={_toCSVData()}

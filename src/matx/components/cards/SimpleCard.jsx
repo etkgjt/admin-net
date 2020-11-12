@@ -52,19 +52,21 @@ const SimpleCard = ({
 						{/* <IconButton>
 							<Icon>print</Icon>
 						</IconButton> */}
-						<CSVLink
-							data={csvData?.data}
-							headers={csvData?.headers}
-							filename={`TECH_WORLD_${moment().format('YYYY-MM-DD')}`}
-						>
-							<IconButton>
-								<Icon>cloud_download</Icon>
-							</IconButton>
-						</CSVLink>
+						{csvData && Object.keys(csvData) ? (
+							<CSVLink
+								data={csvData?.data}
+								headers={csvData?.headers}
+								filename={`TECH_WORLD_${moment().format('YYYY-MM-DD')}`}
+							>
+								<IconButton>
+									<Icon>cloud_download</Icon>
+								</IconButton>
+							</CSVLink>
+						) : null}
 					</div>
 				) : null}
 			</div>
-			<div className="card-subtitle mb-24">{subtitle}</div>
+			{/* <div className="card-subtitle mb-24">{subtitle}</div> */}
 			{children}
 		</Card>
 	);

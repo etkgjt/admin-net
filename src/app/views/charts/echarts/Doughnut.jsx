@@ -2,7 +2,16 @@ import React from 'react';
 import ReactEcharts from 'echarts-for-react';
 import { withStyles } from '@material-ui/styles';
 
-const DoughnutChart = ({ height, color = [], theme, donutData = [] }) => {
+const DoughnutChart = ({ height, color = [], theme, doughnutData = [] }) => {
+	const toDoughnutData = (arr = []) => {
+		console.log('dornut data', arr);
+		return [
+			{ name: 'Smart Phone', value: arr[0] },
+			{ name: 'Laptop', value: arr[1] },
+			{ name: 'Tablet', value: arr[2] },
+			{ name: 'Accessories', value: arr[3] },
+		];
+	};
 	const option = {
 		legend: {
 			padding: [20, 0, 0, 0],
@@ -77,7 +86,7 @@ const DoughnutChart = ({ height, color = [], theme, donutData = [] }) => {
 						show: false,
 					},
 				},
-				data: [...donutData],
+				data: toDoughnutData(doughnutData),
 				itemStyle: {
 					emphasis: {
 						shadowBlur: 10,
