@@ -74,7 +74,6 @@ class AddCustomerForm extends Component {
 				username: email,
 				first_name: firstName,
 				last_name: lastName,
-				address: null,
 				phone_number: mobile,
 				gender: gender === 'male' ? 0 : 1,
 				role: 2,
@@ -128,7 +127,7 @@ class AddCustomerForm extends Component {
 				<SimpleCard>
 					<h3>Add a New Customer</h3>
 					<ValidatorForm
-						ref="form"
+						// ref="form"
 						onSubmit={this.handleSubmit}
 						onError={(errors) => null}
 					>

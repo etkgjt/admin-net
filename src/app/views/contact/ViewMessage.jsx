@@ -50,7 +50,7 @@ const ViewMessage = ({ location }) => {
 		}
 	};
 
-	const _handleSendEmail = async (userEmail = 'canlong103@gmail.com') => {
+	const _handleSendEmail = async (userEmail) => {
 		try {
 			MySpinner.show();
 			const data = {
@@ -58,7 +58,7 @@ const ViewMessage = ({ location }) => {
 				template_id: 'template_jfuj2ma',
 				user_id: 'user_4A8bWFc8sR8Tkb6AMKKdN',
 				template_params: {
-					user_email: userEmail,
+					user_email: userEmail?.toLowerCase(),
 					our_message: message,
 				},
 			};
@@ -74,21 +74,22 @@ const ViewMessage = ({ location }) => {
 				)
 				.then((res) => res?.data);
 			const rep = await reply(token, state?.id);
-			console.log('send email success', res, rep);
+			console.log('send email success', res, rep, data);
 			MySpinner.hide(() => {}, { label: 'Reply Success !', value: 0 });
 		} catch (err) {
 			MySpinner.hide(() => {}, { label: 'Reply Failed !', value: 1 });
 			console.log('send email err', err);
 		}
 	};
+	console.log('state ne', state);
 	return (
 		<div className="m-sm-30">
 			<h6>View Message</h6>
 			<SimpleCard title="Message">
 				<div style={{ flexDirection: 'column', display: 'flex' }}>
 					<h6>From:</h6>
-					<small>Email: ABC@gmail.com</small>
-					<small className="mb-16">Phone: 0232 123 123</small>
+					<small>Email: {state?.email}</small>
+					<small className="mb-16">Phone: {state?.phone}</small>
 					<TextField variant="outlined" value={state?.message} multiline />
 					<div
 						style={{
@@ -124,7 +125,7 @@ const ViewMessage = ({ location }) => {
 						autoFocus
 					/>
 					<Button
-						onClick={() => _handleSendEmail()}
+						onClick={() => _handleSendEmail(state?.email)}
 						color="primary"
 						variant="contained"
 						style={{ width: 85, height: 35 }}
