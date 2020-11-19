@@ -34,6 +34,14 @@ const defaultOption = {
 			start: 0,
 			end: 9999,
 		},
+		{
+			id: 'dataZoomY',
+			type: 'slider',
+			yAxisIndex: [0],
+			filterMode: 'filter',
+			start: 0,
+			end: 999999,
+		},
 	],
 	series: [
 		{

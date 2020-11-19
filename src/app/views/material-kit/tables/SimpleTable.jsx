@@ -25,113 +25,6 @@ import {
 	updateOrderStatus,
 } from 'app/redux/actions/OrderAction';
 
-const subscribarList = [
-	{
-		name: 'john doe',
-		date: '18 january, 2019',
-		amount: 1000,
-		status: 'close',
-		company: 'ABC Fintech LTD.',
-	},
-	{
-		name: 'kessy bryan',
-		date: '10 january, 2019',
-		amount: 9000,
-		status: 'open',
-		company: 'My Fintech LTD.',
-	},
-	{
-		name: 'james cassegne',
-		date: '8 january, 2019',
-		amount: 5000,
-		status: 'close',
-		company: 'Collboy Tech LTD.',
-	},
-	{
-		name: 'lucy brown',
-		date: '1 january, 2019',
-		amount: 89000,
-		status: 'open',
-		company: 'ABC Fintech LTD.',
-	},
-	{
-		name: 'lucy brown',
-		date: '1 january, 2019',
-		amount: 89000,
-		status: 'open',
-		company: 'ABC Fintech LTD.',
-	},
-	{
-		name: 'lucy brown',
-		date: '1 january, 2019',
-		amount: 89000,
-		status: 'open',
-		company: 'ABC Fintech LTD.',
-	},
-	{
-		name: 'john doe',
-		date: '18 january, 2019',
-		amount: 1000,
-		status: 'close',
-		company: 'ABC Fintech LTD.',
-	},
-	{
-		name: 'kessy bryan',
-		date: '10 january, 2019',
-		amount: 9000,
-		status: 'open',
-		company: 'My Fintech LTD.',
-	},
-	{
-		name: 'kessy bryan',
-		date: '10 january, 2019',
-		amount: 9000,
-		status: 'open',
-		company: 'My Fintech LTD.',
-	},
-	{
-		name: 'james cassegne',
-		date: '8 january, 2019',
-		amount: 5000,
-		status: 'close',
-		company: 'Collboy Tech LTD.',
-	},
-	{
-		name: 'lucy brown',
-		date: '1 january, 2019',
-		amount: 89000,
-		status: 'open',
-		company: 'ABC Fintech LTD.',
-	},
-	{
-		name: 'lucy brown',
-		date: '1 january, 2019',
-		amount: 89000,
-		status: 'open',
-		company: 'ABC Fintech LTD.',
-	},
-	{
-		name: 'lucy brown',
-		date: '1 january, 2019',
-		amount: 89000,
-		status: 'open',
-		company: 'ABC Fintech LTD.',
-	},
-	{
-		name: 'lucy brown',
-		date: '1 january, 2019',
-		amount: 89000,
-		status: 'open',
-		company: 'ABC Fintech LTD.',
-	},
-	{
-		name: 'lucy brown',
-		date: '1 january, 2019',
-		amount: 89000,
-		status: 'open',
-		company: 'ABC Fintech LTD.',
-	},
-];
 const tableHeading = {
 	customer: ['Name', 'Email', 'Address', 'Phone Number', ''],
 	product: ['Name', 'Description', 'Inventory', 'Price', ''],
@@ -139,7 +32,7 @@ const tableHeading = {
 	contact: ['Message No.', 'Email', 'Phone Number', 'Message', 'Date', ''],
 };
 
-const SimpleTable = ({ type, data }) => {
+const SimpleTable = ({ type, data = [] }) => {
 	const history = useHistory();
 	const dispatch = useDispatch();
 	const { token } = useSelector((state) => state.user);
@@ -227,7 +120,7 @@ const SimpleTable = ({ type, data }) => {
 				</TableHead>
 				<TableBody>
 					{type === 'customer'
-						? data.map((item, index) => (
+						? data?.map((item, index) => (
 								<TableRow key={index}>
 									<TableCell className="px-0 capitalize" align="left">
 										{`${item?.first_name} ${item?.last_name}`}
@@ -255,7 +148,7 @@ const SimpleTable = ({ type, data }) => {
 								</TableRow>
 						  ))
 						: type === 'product'
-						? data.map((item, index) => (
+						? data?.map((item, index) => (
 								<TableRow key={index}>
 									<TableCell className="px-0 capitalize" align="left">
 										{item?.name}
@@ -359,9 +252,7 @@ const SimpleTable = ({ type, data }) => {
 										>
 											<Icon
 												style={{
-													color: !v?.reply
-														? '#09B66E'
-														: '#625E80',
+													color: !v?.reply ? '#09B66E' : '#625E80',
 												}}
 											>
 												reply
@@ -370,7 +261,7 @@ const SimpleTable = ({ type, data }) => {
 									</TableCell>
 								</TableRow>
 						  ))
-						: data.map((item, indexs) => (
+						: data?.map((item, indexs) => (
 								<TableRow key={indexs}>
 									<TableCell className="px-0 capitalize" align="left">
 										{item?.id}

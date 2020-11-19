@@ -9,8 +9,12 @@ import {
 	updateOrdersRedux,
 } from '../../redux/actions/OrderAction';
 import MyAlert from 'matx/components/MyAlert';
+import socket from '../socket/index';
 
 const OrderList = ({ location }) => {
+	socket.on('new-user-noti', (data) =>
+		console.log('Socket on any ne', data?.type, new Date().getMilliseconds())
+	);
 	const subscribarList = [
 		{
 			name: 'john doe',
@@ -57,6 +61,7 @@ const OrderList = ({ location }) => {
 					/>
 				</div> */}
 			<h4>OrderList</h4>
+
 			<AppTable type="order" data={data} />
 		</div>
 	);

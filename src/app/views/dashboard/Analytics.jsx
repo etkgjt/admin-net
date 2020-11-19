@@ -16,6 +16,7 @@ import {
 	getAllStatistic,
 	updateStatisticDataToRedux,
 } from 'app/redux/actions/StatisticAction';
+
 const mockData = {
 	week: {
 		'1-2020': 9012,
@@ -61,6 +62,7 @@ const mockData = {
 	},
 };
 const Dashboard1 = (props) => {
+	
 	let { theme } = props;
 	const { sale, product, customer, category } = useSelector(
 		(state) => state?.statisticReducer

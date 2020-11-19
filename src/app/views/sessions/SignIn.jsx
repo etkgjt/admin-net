@@ -18,6 +18,7 @@ import { logoutUser } from 'app/redux/actions/UserActions';
 import { Dialog, DialogTitle } from '@material-ui/core';
 import MySpinner from 'matx/components/MySpinner';
 
+
 const styles = (theme) => ({
 	wrapper: {
 		position: 'relative',
@@ -33,12 +34,17 @@ const styles = (theme) => ({
 });
 
 class SignIn extends Component {
+	constructor(props) {
+		super(props);
+		
+	}
 	state = {
 		email: 'admin@gmail.com',
 		password: 'admin',
 		agreement: '',
 		spinnerOpen: false,
 	};
+
 	handleChange = (event) => {
 		event.persist();
 		this.setState({

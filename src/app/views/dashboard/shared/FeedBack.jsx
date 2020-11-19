@@ -10,7 +10,9 @@ import { CircularProgress } from '@material-ui/core';
 
 const FeedBack = () => {
 	const dispatch = useDispatch();
-	const { messages } = useSelector((state) => state?.contactReducer);
+	let { messages } = useSelector((state) => state?.contactReducer);
+	if (messages && messages.length) messages.reverse();
+
 	const { token } = useSelector((state) => state.user);
 	const [state, setState] = useState(
 		messages && messages.length ? [...messages] : []
