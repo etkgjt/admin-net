@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
 	Icon,
 	Badge,
@@ -13,31 +13,70 @@ import { Link } from 'react-router-dom';
 import { withStyles } from '@material-ui/styles';
 import { getTimeDifference } from 'utils.js';
 import { PropTypes } from 'prop-types';
-import { connect } from 'react-redux';
+import { connect, useSelector, useDispatch } from 'react-redux';
 import {
 	getNotification,
 	deleteAllNotification,
 	deleteNotification,
+	generateNotiObject,
 } from '../../redux/actions/NotificationActions';
+import socket from '../../views/socket/index';
+import shortId from 'shortid';
 
+import moment from 'moment';
 function NotificationBar(props) {
+	const dispatch = useDispatch();
+	const listNotiRedux = useSelector((state) => state.notification);
+	const reverseList = listNotiRedux.reverse();
+	useEffect(() => {
+		setNotiList(
+			reverseList?.map((v) =>
+				generateNotiObject(
+					v?.type,
+					v?.id,
+					v?.date ? v?.date : moment(),
+					v?.email
+				)
+			)
+		);
+	}, [listNotiRedux]);
+	const [notification, setNotiList] = useState(
+		reverseList?.map((v) =>
+			generateNotiObject(
+				v?.type,
+				v?.id,
+				v?.date ? v?.date : moment(),
+				v?.email
+			)
+		)
+	);
+	useEffect(() => {
+		if (!listNotiRedux || !listNotiRedux.length) dispatch(getNotification());
+	}, []);
+	console.log('list noti', notification);
 	const {
 		container,
 		theme,
 		settings,
-		notification: notifcationList = [],
-		getNotification,
-		deleteAllNotification,
-		deleteNotification,
+		// notification: notifcationList = [],
 	} = props;
-
+	socket.on('new-user-noti', () => {
+		dispatch(getNotification());
+	});
+	socket.on('new-order-noti', () => {
+		dispatch(getNotification());
+	});
+	socket.on('new-message-noti', () => {
+		dispatch(getNotification());
+	});
 	const [panelOpen, setPanelOpen] = React.useState(false);
 
-	function handleDrawerToggle() {
-		if (!panelOpen) {
-			getNotification();
-		}
+	function handleDrawerToggle(id) {
+		// if (!panelOpen) {
+		// 	dispatch(getNotification());
+		// }
 		setPanelOpen(!panelOpen);
+		if (id) dispatch(deleteNotification(id, listNotiRedux));
 	}
 	const parentThemePalette = theme.palette;
 	// console.log(theme);
@@ -53,7 +92,7 @@ function NotificationBar(props) {
 							: parentThemePalette.text.primary,
 				}}
 			>
-				<Badge color="secondary" badgeContent={5}>
+				<Badge color="secondary" badgeContent={listNotiRedux?.length}>
 					<Icon style={{ color: 'white' }}>notifications</Icon>
 				</Badge>
 			</IconButton>
@@ -75,23 +114,25 @@ function NotificationBar(props) {
 						<h5 className="ml-8 my-0 font-weight-500">Notifications</h5>
 					</div>
 
-					{notifcationList.map((notification) => (
+					{notification.map((v) => (
 						<div
-							key={notification.id}
+							key={v.id}
 							className="notification__card position-relative"
 						>
 							<IconButton
 								size="small"
 								className="delete-button bg-light-gray mr-24"
-								onClick={() => deleteNotification(notification.id)}
+								onClick={() =>
+									dispatch(deleteNotification(v.id, listNotiRedux))
+								}
 							>
 								<Icon className="text-muted" fontSize="small">
 									clear
 								</Icon>
 							</IconButton>
 							<Link
-								to={`/${notification.path}`}
-								onClick={handleDrawerToggle}
+								to={`${v.path}`}
+								onClick={() => handleDrawerToggle(v?.id)}
 							>
 								<Card className="mx-16 mb-24" elevation={3}>
 									<div className="card__topbar flex flex-middle flex-space-between p-8 bg-light-gray">
@@ -100,27 +141,22 @@ function NotificationBar(props) {
 												<Icon
 													className="card__topbar__icon"
 													fontSize="small"
-													color={notification.icon.color}
+													color={v?.icon?.color}
 												>
-													{notification.icon.name}
+													{v.icon.name}
 												</Icon>
 											</div>
 											<span className="ml-4 font-weight-500 text-muted">
-												{notification.heading}
+												{v.heading}
 											</span>
 										</div>
 										<small className="card__topbar__time text-muted">
-											{getTimeDifference(
-												new Date(notification.timestamp)
-											)}{' '}
-											ago
+											{getTimeDifference(new Date(v.timestamp))} ago
 										</small>
 									</div>
 									<div className="px-16 pt-8 pb-16">
-										<p className="m-0">{notification.title}</p>
-										<small className="text-muted">
-											{notification.subtitle}
-										</small>
+										<p className="m-0">{v.title}</p>
+										<small className="text-muted">{v.subtitle}</small>
 									</div>
 								</Card>
 							</Link>
@@ -128,7 +164,11 @@ function NotificationBar(props) {
 					))}
 
 					<div className="text-center">
-						<Button onClick={deleteAllNotification}>
+						<Button
+							onClick={() =>
+								dispatch(deleteAllNotification(listNotiRedux))
+							}
+						>
 							Clear Notifications
 						</Button>
 					</div>

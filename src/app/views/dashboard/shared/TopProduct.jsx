@@ -131,7 +131,7 @@ const TopProduct = ({ productList }) => {
 									align="center"
 									colSpan={1}
 								>
-									{product?.rate}
+									{Math.round(product?.rate * 100) / 100}
 								</TableCell>
 							</TableRow>
 						))}

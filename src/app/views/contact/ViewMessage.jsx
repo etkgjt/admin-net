@@ -10,7 +10,10 @@ import {
 } from 'app/redux/actions/ContactAction';
 import { useDispatch, useSelector } from 'react-redux';
 import MyAlert from 'matx/components/MyAlert';
+import { useHistory } from 'react-router-dom';
+
 const ViewMessage = ({ location }) => {
+	const history = useHistory();
 	const [state, setState] = useState({});
 	const [message, setMessage] = useState('');
 	const dispatch = useDispatch();
@@ -76,6 +79,7 @@ const ViewMessage = ({ location }) => {
 			const rep = await reply(token, state?.id);
 			console.log('send email success', res, rep, data);
 			MySpinner.hide(() => {}, { label: 'Reply Success !', value: 0 });
+			history.goBack();
 		} catch (err) {
 			MySpinner.hide(() => {}, { label: 'Reply Failed !', value: 1 });
 			console.log('send email err', err);

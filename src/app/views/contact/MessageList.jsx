@@ -9,26 +9,29 @@ import {
 	updateContactMessageToRedux,
 } from '../../redux/actions/ContactAction';
 import MyAlert from 'matx/components/MyAlert';
+import socket from '../socket/index';
 
 const MessageList = ({ location }) => {
+	socket.on('new-message-noti', () => initialData());
 	const dispatch = useDispatch();
-	const listMessageRedux = useSelector(
+	const listMessageReverse = useSelector(
 		(state) => state.contactReducer.messages
 	);
+	// const listMessageReverse = listMessageRedux?.reverse();
 	const [data, setData] = useState(
-		listMessageRedux && listMessageRedux.length ? listMessageRedux : []
+		listMessageReverse && listMessageReverse.length ? listMessageReverse : []
 	);
 	const { token } = useSelector((state) => state.user);
 	useEffect(() => {
 		if (
-			!listMessageRedux ||
-			(listMessageRedux && listMessageRedux.length === 0)
+			!listMessageReverse ||
+			(listMessageReverse && listMessageReverse.length === 0)
 		)
 			initialData();
 	}, []);
 	useEffect(() => {
-		setData(listMessageRedux);
-	}, [listMessageRedux]);
+		setData(listMessageReverse);
+	}, [listMessageReverse]);
 	const initialData = async () => {
 		try {
 			console.log('Fetch Data ne');

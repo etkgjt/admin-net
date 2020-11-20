@@ -103,11 +103,13 @@ class Layout1Topbar extends Component {
 								</div>
 							</div>
 							<div className="flex flex-middle">
-								<MatxSearchBox />
+								{/* <MatxSearchBox /> */}
 
 								<NotificationBar />
-
-								<MatxMenu
+								<IconButton onClick={() => this.handleSignOut()}>
+									<Icon style={{ color: 'white' }}>meeting_room</Icon>
+								</IconButton>
+								{/* <MatxMenu
 									menuButton={
 										<img
 											className="mx-8 text-middle circular-image-small cursor-pointer"
@@ -152,7 +154,7 @@ class Layout1Topbar extends Component {
 										</Icon>
 										<span className="pl-16"> Logout </span>
 									</MenuItem>
-								</MatxMenu>
+								</MatxMenu> */}
 							</div>
 						</div>
 					</div>

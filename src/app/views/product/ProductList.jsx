@@ -12,17 +12,26 @@ const ProductList = React.memo(() => {
 	console.log('Produclist render');
 
 	const dispatch = useDispatch();
-	const productRedux = useSelector((state) => state.productReducer.products);
+	const productReduxReverse = useSelector(
+		(state) => state.productReducer.products
+	);
+	// const productReduxReverse = productRedux?.reverse();
 	const [data, setData] = useState(
-		productRedux && productRedux.length ? productRedux : []
+		productReduxReverse && productReduxReverse.length
+			? productReduxReverse
+			: []
 	);
 	useEffect(() => {
-		if (!productRedux || (productRedux && productRedux.length === 0))
+		if (
+			!productReduxReverse ||
+			(productReduxReverse && productReduxReverse.length === 0)
+		)
 			initialData();
 	}, []);
 	useEffect(() => {
-		if (productRedux && productRedux.length) setData(productRedux);
-	}, [productRedux]);
+		if (productReduxReverse && productReduxReverse.length)
+			setData(productReduxReverse);
+	}, [productReduxReverse]);
 	const initialData = async () => {
 		try {
 			console.log('Fetch Data ne');

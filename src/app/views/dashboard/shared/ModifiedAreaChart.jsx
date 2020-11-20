@@ -32,7 +32,7 @@ const defaultOption = {
 			xAxisIndex: [0],
 			filterMode: 'filter',
 			start: 0,
-			end: 9999,
+			end: 99,
 		},
 		{
 			id: 'dataZoomY',
@@ -40,7 +40,7 @@ const defaultOption = {
 			yAxisIndex: [0],
 			filterMode: 'filter',
 			start: 0,
-			end: 999999,
+			end: 99999,
 		},
 	],
 	series: [

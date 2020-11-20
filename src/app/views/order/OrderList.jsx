@@ -12,9 +12,7 @@ import MyAlert from 'matx/components/MyAlert';
 import socket from '../socket/index';
 
 const OrderList = ({ location }) => {
-	socket.on('new-user-noti', (data) =>
-		console.log('Socket on any ne', data?.type, new Date().getMilliseconds())
-	);
+	socket.on('new-order-noti', () => initialData());
 	const subscribarList = [
 		{
 			name: 'john doe',
@@ -26,17 +24,21 @@ const OrderList = ({ location }) => {
 	];
 	const dispatch = useDispatch();
 	const ordersRedux = useSelector((state) => state.orderReducer.orders);
+	const ordersReduxReverse = ordersRedux?.reverse();
 	const [data, setData] = useState(
-		ordersRedux && ordersRedux.length ? ordersRedux : []
+		ordersReduxReverse && ordersReduxReverse.length ? ordersReduxReverse : []
 	);
 	const { token } = useSelector((state) => state.user);
 	useEffect(() => {
-		if (!ordersRedux || (ordersRedux && ordersRedux.length === 0))
+		if (
+			!ordersReduxReverse ||
+			(ordersReduxReverse && ordersReduxReverse.length === 0)
+		)
 			initialData();
 	}, []);
 	useEffect(() => {
-		setData(ordersRedux);
-	}, [ordersRedux]);
+		setData(ordersReduxReverse);
+	}, [ordersReduxReverse]);
 	const initialData = async () => {
 		try {
 			console.log('Fetch Data ne');

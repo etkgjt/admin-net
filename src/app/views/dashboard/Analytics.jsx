@@ -1,5 +1,11 @@
 import React, { Component, Fragment, useEffect, useState } from 'react';
-import { Grid, Card, Select, MenuItem } from '@material-ui/core';
+import {
+	Grid,
+	Card,
+	Select,
+	MenuItem,
+	CircularProgress,
+} from '@material-ui/core';
 
 import DoughnutChart from '../charts/echarts/Doughnut';
 
@@ -16,7 +22,7 @@ import {
 	getAllStatistic,
 	updateStatisticDataToRedux,
 } from 'app/redux/actions/StatisticAction';
-
+import moment from 'moment';
 const mockData = {
 	week: {
 		'1-2020': 9012,
@@ -62,7 +68,6 @@ const mockData = {
 	},
 };
 const Dashboard1 = (props) => {
-	
 	let { theme } = props;
 	const { sale, product, customer, category } = useSelector(
 		(state) => state?.statisticReducer
@@ -121,13 +126,15 @@ const Dashboard1 = (props) => {
 			console.log('get statistics err', err);
 		}
 	};
-	console.log('state analystics ne', state, state?.customer);
+	console.log('state analystics ne', state, state?.sale);
 
 	return (
 		<Fragment>
-			<LineChart
-				sale={state?.sale && state?.sale?.week ? state?.sale : mockData}
-			/>
+			{state?.sale && state.sale.week ? (
+				<LineChart sale={state?.sale} />
+			) : (
+				<CircularProgress />
+			)}
 
 			<div className="analytics m-sm-30 mt--72">
 				<Grid container spacing={3}>
@@ -156,10 +163,10 @@ const Dashboard1 = (props) => {
 							<DoughnutChart
 								height="350px"
 								color={[
+									theme.palette.primary.main,
 									theme.palette.primary.dark,
 									theme.palette.primary.main,
 									theme.palette.primary.light,
-									theme.palette.primary.main,
 								]}
 								doughnutData={[...Object.values(category)]}
 							/>
@@ -176,34 +183,68 @@ const Dashboard1 = (props) => {
 };
 const LineChart = ({ sale }) => {
 	const [mode, setMode] = useState('Week'); // 0 = week, 1=month,2=year
-
-	console.log('sale', sale);
-	const parseStatisticsData = (data) => {
+	// const { sale } = useSelector((state) => state?.statisticReducer);
+	const [chartData, setChartData] = useState(
+		Object.keys(sale).length ? sale : {}
+	);
+	useEffect(() => {
+		setChartData(sale);
+	}, [sale]);
+	const parseStatisticsData = (data, type) => {
+		console.log('data trong parse ne', data);
 		let labels = Object.keys(data);
 		let values = Object.values(data).map((v) => parseInt(v / 10000000));
+		let newArr = [];
+		for (let i = 0; i < labels.length; i++) {
+			newArr.push({ key: labels[i], value: values[i] });
+		}
+		newArr.sort((a, b) => {
+			if (type === 'year') {
+				return a.key * 1 - b.key * 1;
+			} else if (type === 'month') {
+				let s = `${a.key}`.split('-');
+				let z = `${b.key}`.split('-');
+				let momentA = moment().year(s[1]).month(s[0]).date(0);
+				let momentB = moment().year(z[1]).month(z[0]).date(0);
+				return momentA.valueOf() - momentB.valueOf();
+			} else {
+				let s = `${a.key}`.split('-');
+				let z = `${b.key}`.split('-');
+				let momentA = moment()
+					.dayOfYear(s[0] * 7)
+					.year(s[1] * 1);
+				let momentB = moment()
+					.dayOfYear(z[0] * 7)
+					.year(z[1] * 1);
+				return momentA.valueOf() - momentB.valueOf();
+			}
+		});
+		let labels1 = newArr.map((v) => v.key);
+		let values1 = newArr.map((v) => v.value);
 		return {
-			labels,
-			values,
+			labels: labels1,
+			values: values1,
 		};
 	};
 	const [state, setState] = useState(
-		sale?.week ? parseStatisticsData(sale?.week) : {}
+		chartData?.week ? parseStatisticsData(chartData?.week, 'week') : {}
 	);
 	useEffect(() => {
 		setState(
 			mode === 'Week'
-				? sale?.week
-					? parseStatisticsData(sale?.week)
+				? chartData?.week
+					? parseStatisticsData(chartData?.week, 'week')
 					: {}
 				: mode === 'Month'
-				? sale?.month
-					? parseStatisticsData(sale?.month)
+				? chartData?.month
+					? parseStatisticsData(chartData?.month, 'month')
 					: {}
-				: sale?.year
-				? parseStatisticsData(sale?.year)
+				: chartData?.year
+				? parseStatisticsData(chartData?.year, 'year')
 				: {}
 		);
 	}, [mode]);
+	console.log('state chart data ne', state);
 	return (
 		<div className="pb-86 pt-30 px-30 bg-primary">
 			<Select
@@ -236,20 +277,24 @@ const LineChart = ({ sale }) => {
 					Year
 				</MenuItem>
 			</Select>
-			<ModifiedAreaChart
-				height="280px"
-				option={{
-					series: [
-						{
-							data: [...state?.values],
-							type: 'line',
+			{state && state.values && state.values.length ? (
+				<ModifiedAreaChart
+					height="280px"
+					option={{
+						series: [
+							{
+								data: [...state?.values],
+								type: 'line',
+							},
+						],
+						xAxis: {
+							data: [...state?.labels],
 						},
-					],
-					xAxis: {
-						data: [...state?.labels],
-					},
-				}}
-			></ModifiedAreaChart>
+					}}
+				></ModifiedAreaChart>
+			) : (
+				<CircularProgress />
+			)}
 		</div>
 	);
 };

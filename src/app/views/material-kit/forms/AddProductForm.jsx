@@ -276,7 +276,7 @@ const AddProductForm = ({ token }) => {
 								<FormControlLabel
 									value="tablet"
 									control={<Radio color="secondary" />}
-									label="Others"
+									label="Tablet"
 									labelPlacement="end"
 								/>
 								<FormControlLabel

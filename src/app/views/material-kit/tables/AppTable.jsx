@@ -19,7 +19,10 @@ import { CSVLink, CSVDownload } from 'react-csv';
 // 	{ firstname: 'Yezzi', lastname: 'Min l3b', email: 'ymin@cocococo.com' },
 // ];
 const AppTable = ({ type, data }) => {
-	const [state, setState] = useState(data && data.length ? data : []);
+	const dataReverse = data?.reverse();
+	const [state, setState] = useState(
+		dataReverse && dataReverse.length ? dataReverse : []
+	);
 
 	useEffect(() => {
 		console.log('set state');
@@ -219,7 +222,7 @@ const AppTable = ({ type, data }) => {
 				title={
 					type === 'contact'
 						? 'All Message'
-						: 'order'
+						: type === 'order'
 						? 'All Orders'
 						: type === 'product'
 						? 'All Products'

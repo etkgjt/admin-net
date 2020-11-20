@@ -78,9 +78,9 @@ export const navigations = [
 			},
 		],
 	},
-	{
-		name: 'Sign Out',
-		icon: 'meeting_room',
-		path: '/others/drag-and-drop',
-	},
+	// {
+	// 	name: 'Sign Out',
+	// 	icon: 'meeting_room',
+	// 	path: '/others/drag-and-drop',
+	// },
 ];

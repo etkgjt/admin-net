@@ -141,9 +141,9 @@ const SimpleTable = ({ type, data = [] }) => {
 										>
 											<Icon>create</Icon>
 										</IconButton>
-										<IconButton>
+										{/* <IconButton>
 											<Icon color="error">close</Icon>
-										</IconButton>
+										</IconButton> */}
 									</TableCell>
 								</TableRow>
 						  ))
@@ -210,14 +210,36 @@ const SimpleTable = ({ type, data = [] }) => {
 						: type === 'contact'
 						? data?.map((v, i) => (
 								<TableRow key={`${v?.email}-${v?.phone}`}>
-									<TableCell className="px-0 capitalize" align="left">
+									<TableCell className="px-0" size="small">
 										{`#${i}`}
 									</TableCell>
-									<TableCell className="px-0 capitalize" align="left">
-										{v?.email}
+									<TableCell className="px-0" align="left">
+										<div
+											style={{
+												overflow: 'hidden',
+												textOverflow: 'ellipsis',
+												maxHeight: 30,
+												display: 'block',
+												lineHeight: '1.8em',
+												wordWrap: 'break-word',
+											}}
+										>
+											{v?.email}
+										</div>
 									</TableCell>
-									<TableCell className="px-0 capitalize" align="left">
-										{v?.phone}
+									<TableCell className="px-0 capitalize">
+										<div
+											style={{
+												overflow: 'hidden',
+												textOverflow: 'ellipsis',
+												maxHeight: 30,
+												display: 'block',
+												lineHeight: '1.8em',
+												wordWrap: 'break-word',
+											}}
+										>
+											{v?.phone}
+										</div>
 									</TableCell>
 
 									<TableCell className="px-0 pr-5" align="left">
@@ -239,7 +261,9 @@ const SimpleTable = ({ type, data = [] }) => {
 										size="small"
 										align="left"
 									>
-										{v?.date}
+										{v?.date
+											? moment(v?.date).format('YYYY-MM-DD HH:mm:SS')
+											: moment().format('YYYY-MM-DD HH:mm:SS')}
 									</TableCell>
 									<TableCell
 										className="px-0 capitalize"
@@ -261,8 +285,8 @@ const SimpleTable = ({ type, data = [] }) => {
 									</TableCell>
 								</TableRow>
 						  ))
-						: data?.map((item, indexs) => (
-								<TableRow key={indexs}>
+						: data?.map((item, i) => (
+								<TableRow key={`${item?.id}`}>
 									<TableCell className="px-0 capitalize" align="left">
 										{item?.id}
 									</TableCell>
@@ -309,13 +333,10 @@ const SimpleTable = ({ type, data = [] }) => {
 										<GroupButton
 											orderId={item?.id}
 											token={token}
-											onChangeStatusSuccessFunc={(indexs, status) =>
-												_handleOnChangeOrderStatusSuccess(
-													indexs,
-													status
-												)
+											onChangeStatusSuccessFunc={(i, status) =>
+												_handleOnChangeOrderStatusSuccess(i, status)
 											}
-											index={indexs}
+											index={i}
 										/>
 									</TableCell>
 								</TableRow>

@@ -6,27 +6,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import StateManager from 'react-select';
 import { updateAllCustonerToRedux } from '../../redux/actions/CustomerAction';
 import MyAlert from 'matx/components/MyAlert';
+import socket from '../socket/index';
 
-// class CustomerList extends Component {
-// 	render() {
-// 		return (
-// 			<div className="m-sm-30">
-// 				<div className="mb-sm-30">
-// 					<Breadcrumb
-// 						routeSegments={[
-// 							{ name: 'Customer', path: '/customer-list' },
-// 							{ name: 'Customer List' },
-// 						]}
-// 					/>
-// 				</div>
-// 				<AppTable type="customer" />
-// 			</div>
-// 		);
-// 	}
-// }
 const CustomerList = () => {
 	const [state, setState] = useState([]);
 	const data = useSelector((state) => state.user);
+
+	socket.on('new-user-noti', () => _handleGetAllUser(data?.token));
+
 	console.log('user adata ne', data);
 	const { customers } = useSelector((state) => state.customerReducer);
 	const dispatch = useDispatch();

@@ -1,9 +1,7 @@
 import { REDUX } from '../type';
 
 const initialState = {
-	sale: {
-		
-	},
+	sale: {},
 	customer: [],
 	product: [
 		// {
