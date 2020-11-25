@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+
+import { getNumberWithDot } from '../../../../utils';
 import {
 	Card,
 	Icon,
@@ -118,13 +120,16 @@ const TopProduct = ({ productList }) => {
 									align="center"
 									colSpan={2}
 								>
-									$
 									{product.price * product.buying_times > 999
-										? (
-												(product.price * product.buying_time) /
-												1000
-										  ).toFixed(1) + 'k'
-										: product.price * product.buying_time}
+										? getNumberWithDot(
+												(
+													(product.price * product.buying_time) /
+													1000
+												).toFixed(1)
+										  ) + 'k'
+										: getNumberWithDot(
+												product.price * product.buying_time
+										  )}
 								</TableCell>
 								<TableCell
 									className="px-0 capitalize"

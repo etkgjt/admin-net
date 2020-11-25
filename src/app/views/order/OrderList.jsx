@@ -24,7 +24,7 @@ const OrderList = ({ location }) => {
 	];
 	const dispatch = useDispatch();
 	const ordersRedux = useSelector((state) => state.orderReducer.orders);
-	const ordersReduxReverse = ordersRedux?.reverse();
+	const ordersReduxReverse = ordersRedux;
 	const [data, setData] = useState(
 		ordersReduxReverse && ordersReduxReverse.length ? ordersReduxReverse : []
 	);
@@ -43,6 +43,7 @@ const OrderList = ({ location }) => {
 		try {
 			console.log('Fetch Data ne');
 			const data = await getOrderList(token);
+			data.reverse();
 			console.log('Data ne', data);
 			setData(data);
 			updateOrdersRedux(dispatch, data);

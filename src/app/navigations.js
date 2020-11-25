@@ -78,6 +78,22 @@ export const navigations = [
 			},
 		],
 	},
+	{
+		name: 'Voucher',
+		icon: 'local_offer',
+		children: [
+			{
+				name: 'Voucher List',
+				path: '/voucher/voucher-list',
+				iconText: 'VL',
+			},
+			{
+				name: 'Create Voucher',
+				path: '/voucher/create-voucher',
+				iconText: 'CV',
+			},
+		],
+	},
 	// {
 	// 	name: 'Sign Out',
 	// 	icon: 'meeting_room',

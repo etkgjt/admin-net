@@ -175,6 +175,7 @@ const ViewOrder = ({ location }) => {
 		}
 	};
 	console.log('state data ne', state, stateId);
+
 	return (
 		<div className="m-sm-30">
 			{orderListRedux && orderListRedux.length ? (

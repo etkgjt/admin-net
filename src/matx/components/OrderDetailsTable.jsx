@@ -85,6 +85,7 @@ const editTableHeader = [
 ];
 
 const DetailsTable = ({
+	discount = 0,
 	type = 'view',
 	data = [],
 	onChangeData = () => {},
@@ -135,6 +136,7 @@ const DetailsTable = ({
 				<TableRow>
 					<TableCell>Total</TableCell>
 					<TableCell>VAT (%)</TableCell>
+					<TableCell>Discount</TableCell>
 					<TableCell>Grant total</TableCell>
 				</TableRow>
 			</TableHead>
@@ -147,11 +149,18 @@ const DetailsTable = ({
 						)
 					)} vnđ`}</TableCell>
 					<TableCell>2%</TableCell>
+					<TableCell>- {discount}%</TableCell>
 					<TableCell>{`${getNumberWithDot(
 						state?.reduce(
 							(x, y) => (x += y?.product?.price * 1 * y?.quantity),
 							0
-						) +
+						) -
+							(state?.reduce(
+								(x, y) => (x += y?.product?.price * 1 * y?.quantity),
+								0
+							) *
+								discount) /
+								100 +
 							state?.reduce(
 								(x, y) => (x += y?.product?.price * 1 * y?.quantity),
 								0
@@ -201,6 +210,7 @@ const DetailsTable = ({
 				<TableRow>
 					<TableCell>Total</TableCell>
 					<TableCell>VAT (%)</TableCell>
+					<TableCell>Discount</TableCell>
 					<TableCell>Grant total</TableCell>
 				</TableRow>
 			</TableHead>
@@ -217,7 +227,13 @@ const DetailsTable = ({
 						state?.reduce(
 							(x, y) => (x += y?.product?.price * 1 * y?.quantity),
 							0
-						) +
+						) -
+							(state?.reduce(
+								(x, y) => (x += y?.product?.price * 1 * y?.quantity),
+								0
+							) *
+								discount) /
+								100 +
 							state?.reduce(
 								(x, y) => (x += y?.product?.price * 1 * y?.quantity),
 								0

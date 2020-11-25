@@ -27,27 +27,17 @@ import moment from 'moment';
 function NotificationBar(props) {
 	const dispatch = useDispatch();
 	const listNotiRedux = useSelector((state) => state.notification);
-	const reverseList = listNotiRedux.reverse();
+	const reverseList = listNotiRedux;
 	useEffect(() => {
 		setNotiList(
 			reverseList?.map((v) =>
-				generateNotiObject(
-					v?.type,
-					v?.id,
-					v?.date ? v?.date : moment(),
-					v?.email
-				)
+				generateNotiObject(v?.type, v?.id, v?.date, v?.email)
 			)
 		);
 	}, [listNotiRedux]);
 	const [notification, setNotiList] = useState(
 		reverseList?.map((v) =>
-			generateNotiObject(
-				v?.type,
-				v?.id,
-				v?.date ? v?.date : moment(),
-				v?.email
-			)
+			generateNotiObject(v?.type, v?.id, v?.date, v?.email)
 		)
 	);
 	useEffect(() => {

@@ -48,10 +48,11 @@ const ViewInvoice = ({ data, onEditPress = () => {} }) => {
 		status,
 		customer,
 		details,
+		discount,
 	} = data;
 	const _handleGoback = () => history.goBack();
 
-	const downloadInvoice = async () => {	
+	const downloadInvoice = async () => {
 		const data = getInvoiceData();
 		const result = await easyinvoice.createInvoice(data);
 		const invoiceBase64 = result.pdf;
@@ -254,7 +255,11 @@ const ViewInvoice = ({ data, onEditPress = () => {} }) => {
 			<Grid container spacing={6}>
 				<Grid item lg={12} md={12} sm={12} xs={12}>
 					<SimpleCard>
-						<DetailsTable type="view" data={details ? details : []} />
+						<DetailsTable
+							type="view"
+							data={details ? details : []}
+							discount={discount ? discount : 0}
+						/>
 					</SimpleCard>
 				</Grid>
 			</Grid>

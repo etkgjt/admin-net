@@ -284,6 +284,7 @@ const EditInvoice = ({
 				<Grid item lg={12} md={12} sm={12} xs={12}>
 					<SimpleCard>
 						<DetailsTable
+							discount={state?.discount ? state.discount : 0}
 							type="edit"
 							data={state?.details}
 							onChangeData={(data) => {

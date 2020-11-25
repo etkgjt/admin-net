@@ -17,6 +17,7 @@ import ProductRoutes from './views/product/ProductRoutes';
 import OrderList from './views/order/OrderList';
 import ViewOrder from './views/order/ViewOrder';
 import ContactRoutes from './views/contact/ContactRoutes';
+import VoucherRoutes from './views/voucher/VoucherRoutes';
 
 const redirectRoute = [
 	{
@@ -46,6 +47,7 @@ const routes = [
 	...OrderRoutes,
 	...ProductRoutes,
 	...ContactRoutes,
+	...VoucherRoutes,
 ];
 
 export default routes;

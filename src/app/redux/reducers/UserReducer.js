@@ -33,6 +33,12 @@ const userReducer = function (state = initialState, action) {
 		case REDUX.LOGOUT: {
 			return initialState;
 		}
+		case REDUX.UPDATE_VOUCHER_LIST: {
+			return {
+				...state,
+				vouchers: action.payload,
+			};
+		}
 		default: {
 			return state;
 		}

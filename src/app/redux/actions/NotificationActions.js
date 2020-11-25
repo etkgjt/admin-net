@@ -22,7 +22,8 @@ export const generateNotiObject = (
 					name: 'person_add',
 					color: 'primary',
 				},
-				timestamp: date ? moment(date).valueOf() : moment.valueOf(),
+				timestamp:
+					date && date.length ? moment(date).valueOf() : moment.valueOf(),
 				title: `${email ? email : ''} has become a member`,
 				subtitle: '',
 				path: '/customer/customer-list',
@@ -36,7 +37,8 @@ export const generateNotiObject = (
 					name: 'add_shopping_cart_icon',
 					color: 'primary',
 				},
-				timestamp: date ? moment(date).valueOf() : moment.valueOf(),
+				timestamp:
+					date && date.length ? moment(date).valueOf() : moment.valueOf(),
 				title: `New order from ${email ? email : ''}`,
 				subtitle: 'Check it out!',
 				path: '/order/order-list',
@@ -50,7 +52,8 @@ export const generateNotiObject = (
 					name: 'chat',
 					color: 'primary',
 				},
-				timestamp: date ? moment(date).valueOf() : moment.valueOf(),
+				timestamp:
+					date && date.length ? moment(date).valueOf() : moment.valueOf(),
 				title: `${email ? email : ''}`,
 				subtitle: 'Check it out!',
 				path: '/contact/message-list',
@@ -65,6 +68,7 @@ export const generateNotiObject = (
 export const getNotification = () => async (dispatch) => {
 	try {
 		const { data } = await API.get('/noti');
+		console.log('List noti chua parse', data);
 		let temp = [...data].sort(
 			(a, b) => moment(b.date).valueOf() - moment(a.date).valueOf()
 		);
