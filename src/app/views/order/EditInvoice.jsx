@@ -169,7 +169,6 @@ const EditInvoice = ({
 								validators={[
 									'required',
 									'minStringLength: 4',
-									'maxStringLength: 20',
 									'isEmail',
 								]}
 								onChange={_handleChange}

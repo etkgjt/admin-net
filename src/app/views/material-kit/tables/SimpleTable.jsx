@@ -24,6 +24,10 @@ import {
 	updateOrdersRedux,
 	updateOrderStatus,
 } from 'app/redux/actions/OrderAction';
+import {
+	getAllStatistic,
+	updateStatisticDataToRedux,
+} from 'app/redux/actions/StatisticAction';
 
 const tableHeading = {
 	customer: ['Name', 'Email', 'Address', 'Phone Number', ''],
@@ -349,7 +353,7 @@ const SimpleTable = ({ type, data = [] }) => {
 
 const GroupButton = ({ token, orderId, onChangeStatusSuccessFunc, index }) => {
 	const history = useHistory();
-
+	const dispatch = useDispatch();
 	const _handleViewOrderClick = () => {
 		history.push('/order/view-order', { orderId: orderId ? orderId : 1 });
 	};
@@ -366,6 +370,17 @@ const GroupButton = ({ token, orderId, onChangeStatusSuccessFunc, index }) => {
 				value: status === 3 ? 'Đã giao' : 'Đã huỷ',
 			};
 			onChangeStatusSuccessFunc(index, newStatus);
+			const { sales, customers, circle, product } = await getAllStatistic(
+				token
+			);
+			console.log('init data ne', sales, customers, circle, product);
+			updateStatisticDataToRedux(
+				dispatch,
+				sales,
+				product,
+				customers,
+				circle
+			);
 			MySpinner.hide(() => {}, { label: 'Change status success', value: 0 });
 		} catch (err) {
 			console.log('change status err', err);
