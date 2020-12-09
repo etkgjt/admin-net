@@ -16,7 +16,10 @@ import {
 	Select,
 	MenuItem,
 	InputLabel,
+	CircularProgress,
 } from '@material-ui/core';
+
+import ImageUploader from 'react-images-upload';
 
 import {
 	MuiPickersUtilsProvider,
@@ -35,6 +38,8 @@ import {
 } from 'app/redux/actions/ProductAction';
 import MySpinner from 'matx/components/MySpinner';
 import { useSelector, useDispatch } from 'react-redux';
+
+import axios from 'axios';
 
 const CATEGORY = {
 	smartphone: 1,
@@ -79,6 +84,7 @@ const BRAND_LIST = [
 	'MSI',
 ];
 const UpdateProductForm = ({ productInfo, token }) => {
+	const oldImages = productInfo?.images?.map((v) => v.url);
 	const [state, setState] = useState({
 		name: productInfo?.name || '',
 		description: '',
@@ -87,7 +93,7 @@ const UpdateProductForm = ({ productInfo, token }) => {
 		category: productInfo?.category?.name || 'smartphone',
 		price: productInfo?.price || 0,
 		quantity: productInfo?.stock || 0,
-		image: productInfo?.images || [],
+		image: oldImages && oldImages.length ? oldImages : [],
 		tempImg: '',
 		cpu: productInfo?.description?.cpu || 'none',
 		ram: productInfo?.description?.ram || 0,
@@ -98,6 +104,8 @@ const UpdateProductForm = ({ productInfo, token }) => {
 		color: productInfo?.description?.color || 'red',
 		introduction: productInfo?.description?.introduction || 'none',
 	});
+	const [isLoadImage, setIsLoadImage] = useState(false);
+
 	const { products } = useSelector((state) => state.productReducer);
 	const dispatch = useDispatch();
 	useEffect(() => {
@@ -189,7 +197,7 @@ const UpdateProductForm = ({ productInfo, token }) => {
 			os,
 			memory,
 		} = state;
-		const newImgs = image?.map((v) => v?.url);
+		const newImgs = image;
 		return {
 			name,
 			price: price * 1,
@@ -209,6 +217,30 @@ const UpdateProductForm = ({ productInfo, token }) => {
 				introduction: introduction + '',
 			},
 		};
+	};
+	const onDrop = async (picture) => {
+		setIsLoadImage(true);
+		let formData = new FormData();
+		if (picture && picture.length) {
+			for (let i = 0; i < picture.length; i++) {
+				formData.append('file', picture[i]);
+			}
+		} else {
+			formData.append('file', picture);
+		}
+		console.log('image ne', picture);
+		// setState({
+		// 	...state,
+		// 	image: [...state.image, picture],
+		// 	// tempImg: '',
+		// });
+		const { data } = await axios.post(
+			'https://javaapiweb.herokuapp.com/upload/uploadFile',
+			formData
+		);
+		console.log('Image list ne', data);
+		setState({ ...state, image: [...oldImages, ...data] });
+		setIsLoadImage(false);
 	};
 	let {
 		name,
@@ -462,7 +494,15 @@ const UpdateProductForm = ({ productInfo, token }) => {
 									justifyContent: 'space-between',
 								}}
 							>
-								<Grid className="w-100 mr-3 p-2">
+								<InputLabel>Image</InputLabel>
+
+								<ImageUploader
+									withIcon={true}
+									onChange={onDrop}
+									imgExtension={['.jpg', '.gif', '.png', '.gif']}
+									maxFileSize={5242880}
+								/>
+								{/* <Grid className="w-100 mr-3 p-2">
 									<TextValidator
 										// className="mb-16 w-100"
 										style={{ width: '95%' }}
@@ -486,9 +526,9 @@ const UpdateProductForm = ({ productInfo, token }) => {
 								>
 									<Icon>add</Icon>
 									<span className="pl-8 capitalize">Add</span>
-								</Button>
+								</Button> */}
 							</div>
-							{state.image && state.image.length ? (
+							{state.image && !isLoadImage && state.image.length ? (
 								<Table>
 									<TableHead>
 										<TableRow>
@@ -510,11 +550,7 @@ const UpdateProductForm = ({ productInfo, token }) => {
 													className="px-0 capitalize"
 													align="left"
 												>
-													<img
-														src={v?.url}
-														width={50}
-														height={50}
-													/>
+													<img src={v} width={50} height={50} />
 												</TableCell>
 												<TableCell
 													className="px-0 capitalize"
@@ -530,6 +566,11 @@ const UpdateProductForm = ({ productInfo, token }) => {
 										))}
 									</TableBody>
 								</Table>
+							) : (state.image && isLoadImage && state.image.length) ||
+							  (isLoadImage &&
+									state.image &&
+									state.image.length === 0) ? (
+								<CircularProgress />
 							) : (
 								<div />
 							)}

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+import ImageUploader from 'react-images-upload';
 import {
 	Button,
 	Icon,
@@ -16,6 +17,8 @@ import {
 	Select,
 	MenuItem,
 	InputLabel,
+	Input,
+	CircularProgress,
 } from '@material-ui/core';
 
 import {
@@ -36,6 +39,8 @@ import {
 import MySpinner from 'matx/components/MySpinner';
 import { useDispatch, useSelector } from 'react-redux';
 import MyAlert from 'matx/components/MyAlert';
+
+import axios from 'axios';
 
 const CATEGORY = {
 	smartphone: 1,
@@ -100,6 +105,7 @@ const AddProductForm = ({ token }) => {
 		memory: '',
 		color: '',
 	});
+	const [isLoadImage, setIsLoadImage] = useState(false);
 	const { products } = useSelector((state) => state.productReducer);
 	console.log('Product list ne', products);
 	useEffect(() => {
@@ -204,6 +210,30 @@ const AddProductForm = ({ token }) => {
 				introduction,
 			},
 		};
+	};
+	const onDrop = async (picture) => {
+		setIsLoadImage(true);
+		let formData = new FormData();
+		if (picture && picture.length) {
+			for (let i = 0; i < picture.length; i++) {
+				formData.append('file', picture[i]);
+			}
+		} else {
+			formData.append('file', picture);
+		}
+		console.log('image ne', picture);
+		// setState({
+		// 	...state,
+		// 	image: [...state.image, picture],
+		// 	// tempImg: '',
+		// });
+		const { data } = await axios.post(
+			'https://javaapiweb.herokuapp.com/upload/uploadFile',
+			formData
+		);
+		console.log('Image list ne', data);
+		setState({ ...state, image: [...data] });
+		setIsLoadImage(false);
 	};
 
 	let {
@@ -462,7 +492,15 @@ const AddProductForm = ({ token }) => {
 									justifyContent: 'space-between',
 								}}
 							>
-								<Grid className="w-100 mr-3 p-2">
+								<InputLabel>Image</InputLabel>
+								
+								<ImageUploader
+									withIcon={true}
+									onChange={onDrop}
+									imgExtension={['.jpg', '.gif', '.png', '.gif']}
+									maxFileSize={5242880}
+								/>
+								{/* <Grid className="w-100npm install --save react-images-upload mr-3 p-2">
 									<TextValidator
 										// className="mb-16 w-100"
 										style={{ width: '95%' }}
@@ -476,9 +514,10 @@ const AddProductForm = ({ token }) => {
 											"password didn't match",
 										]}
 										variant="outlined"
+										type="file"
 									/>
-								</Grid>
-								<Button
+								</Grid> */}
+								{/* <Button
 									onClick={addImage}
 									style={{ height: 50 }}
 									color="primary"
@@ -486,9 +525,9 @@ const AddProductForm = ({ token }) => {
 								>
 									<Icon>add</Icon>
 									<span className="pl-8 capitalize">Add</span>
-								</Button>
+								</Button> */}
 							</div>
-							{state.image && state.image.length ? (
+							{state.image && !isLoadImage && state.image.length ? (
 								<Table>
 									<TableHead>
 										<TableRow>
@@ -526,6 +565,11 @@ const AddProductForm = ({ token }) => {
 										))}
 									</TableBody>
 								</Table>
+							) : (state.image && isLoadImage && state.image.length) ||
+							  (isLoadImage &&
+									state.image &&
+									state.image.length === 0) ? (
+								<CircularProgress />
 							) : (
 								<div />
 							)}

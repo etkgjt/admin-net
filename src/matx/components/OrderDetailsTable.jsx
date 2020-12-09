@@ -223,6 +223,8 @@ const DetailsTable = ({
 						)
 					)} vnđ`}</TableCell>
 					<TableCell>2%</TableCell>
+					<TableCell>-{discount}%</TableCell>
+
 					<TableCell>{`${getNumberWithDot(
 						state?.reduce(
 							(x, y) => (x += y?.product?.price * 1 * y?.quantity),
