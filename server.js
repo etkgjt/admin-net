@@ -1,77 +1,16 @@
-// const isTokenExpired = true;
-// let token = 'Current token';
-// let count = 0;
-// const refreshToken = (url) => {
-// 	console.log('Refresh token url: ', url);
-// 	return new Promise((resolve) => {
-// 		setTimeout(() => {
-// 			console.log('\n');
-// 			resolve('New token' + ++count);
-// 		}, 3000);
-// 	});
-// };
-
-// let refreshTokenRequest = null;
-// const requestApi = async (url) => {
-// 	if (isTokenExpired) {
-// 		console.log('requestApi: Ooops ... token expired: ', url, token);
-
-// 		refreshTokenRequest = refreshTokenRequest
-// 			? refreshTokenRequest
-// 			: refreshToken(url);
-
-// 		const newToken = await refreshTokenRequest;
-
-// 		refreshTokenRequest = null;
-
-// 		token = newToken;
-// 		console.log('requestApi: Fetch data with new token: ', url, token);
-// 		return;
-// 	}
-
-// 	console.log('Fetch data: ', url, token)
-// };
-
-// const requestAPI2 = async (url) => {
-// 	if (isTokenExpired) {
-// 		console.log('requestApi: Ooops ... token expired: ', url, token);
-// 		const newToken = await refreshToken(url);
-
-// 		token = newToken;
-
-// 		console.log('requestApi: Fetch data with new token: ', url, token);
-// 		return;
-// 	}
-
-// 	console.log('Fetch data: ', url, token);
-// };
-
-// const main = () => {
-// 	// requestApi('/me');
-
-// 	// requestApi('/shops');
-
-// 	// requestApi('/products');
-
-// 	requestAPI2('/me');
-
-// 	requestAPI2('/shops');
-
-// 	requestAPI2('/products');
-// };
-// main();
-
-// async function count() {
-// 	let c = 0;
-// 	return () => {
-// 		console.log(++c);
-// 	};
-// }
-// // let a = count();
-// // a();
-// // a();
-// // a();
-// // count()();
-// // count()();
-// // count()();
-
+const express = require('express');
+const favicon = require('express-favicon');
+const path = require('path');
+const port = process.env.PORT || 8080;
+const app = express();
+app.use(favicon(__dirname + '/build/favicon.ico'));
+// the __dirname is the current directory from where the script is running
+app.use(express.static(__dirname));
+app.use(express.static(path.join(__dirname, 'build')));
+app.get('/ping', function (req, res) {
+	return res.send('pong');
+});
+app.get('/*', function (req, res) {
+	res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+app.listen(port);
