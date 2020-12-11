@@ -332,20 +332,6 @@ const UpdateProductForm = ({ productInfo, token }) => {
 									<MenuItem value={i}>{v}</MenuItem>
 								))}
 							</Select>
-							{/* <TextValidator
-									className="mb-16 w-100"
-									label="Brand"
-									onChange={handleChange}
-									type="text"
-									name="brand"
-									value={brand}
-									validators={['required']}
-									errorMessages={[
-										'this field is required',
-										'email is not valid',
-									]}
-									variant="outlined"
-								/> */}
 							{category !== 'accessories' ||
 							productInfo?.category?.id !== 4 ? (
 								<div>
