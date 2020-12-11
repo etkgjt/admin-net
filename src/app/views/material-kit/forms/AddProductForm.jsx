@@ -144,7 +144,7 @@ const AddProductForm = ({ token }) => {
 			const res = await addNewProduct(sendData, token);
 			console.log('response', res);
 			// updateProductsRedux(dispatch, [...products, newData]);
-			_handleGetAllProduct();
+			await _handleGetAllProduct();
 			MySpinner.hide(() => {}, {
 				label: 'Add product successful !',
 				value: 0,
