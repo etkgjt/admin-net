@@ -488,31 +488,6 @@ const UpdateProductForm = ({ productInfo, token }) => {
 									imgExtension={['.jpg', '.gif', '.png', '.gif']}
 									maxFileSize={5242880}
 								/>
-								{/* <Grid className="w-100 mr-3 p-2">
-									<TextValidator
-										// className="mb-16 w-100"
-										style={{ width: '95%' }}
-										label="Image"
-										onChange={handleChange}
-										name="tempImg"
-										type="text"
-										value={tempImg}
-										errorMessages={[
-											'this field is required',
-											"password didn't match",
-										]}
-										variant="outlined"
-									/>
-								</Grid>
-								<Button
-									onClick={addImage}
-									style={{ height: 50 }}
-									color="primary"
-									variant="contained"
-								>
-									<Icon>add</Icon>
-									<span className="pl-8 capitalize">Add</span>
-								</Button> */}
 							</div>
 							{state.image && !isLoadImage && state.image.length ? (
 								<Table>
