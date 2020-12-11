@@ -143,7 +143,8 @@ const AddProductForm = ({ token }) => {
 			MySpinner.show();
 			const res = await addNewProduct(sendData, token);
 			console.log('response', res);
-			updateProductsRedux(dispatch, [...products, newData]);
+			// updateProductsRedux(dispatch, [...products, newData]);
+			_handleGetAllProduct();
 			MySpinner.hide(() => {}, {
 				label: 'Add product successful !',
 				value: 0,
@@ -493,7 +494,7 @@ const AddProductForm = ({ token }) => {
 								}}
 							>
 								<InputLabel>Image</InputLabel>
-								
+
 								<ImageUploader
 									withIcon={true}
 									onChange={onDrop}
