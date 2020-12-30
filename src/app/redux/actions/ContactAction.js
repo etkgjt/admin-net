@@ -4,7 +4,7 @@ export const getAllContactMessage = (token) =>
 	new Promise((resolve, reject) => {
 		API.get('/contacts', {
 			headers: {
-				Authorization: token,
+				Authorization: `Bearer ${token}`,
 			},
 		})
 			.then((res) =>
@@ -14,7 +14,15 @@ export const getAllContactMessage = (token) =>
 	});
 export const reply = (token, messageId) =>
 	new Promise((resolve, reject) => {
-		API.put(`/contact/${messageId}`)
+		API.put(
+			`/contacts/${messageId}`,
+			{},
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			}
+		)
 			.then((res) => resolve(res?.data))
 			.catch((err) => reject(err));
 	});

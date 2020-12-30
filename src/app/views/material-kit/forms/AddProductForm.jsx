@@ -41,6 +41,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import MyAlert from 'matx/components/MyAlert';
 
 import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 
 const CATEGORY = {
 	smartphone: 1,
@@ -87,6 +88,8 @@ const BRAND_LIST = [
 
 const AddProductForm = ({ token }) => {
 	const dispatch = useDispatch();
+	const history = useHistory();
+
 	const [state, setState] = useState({
 		name: '',
 		introduction: '',
@@ -105,6 +108,7 @@ const AddProductForm = ({ token }) => {
 		memory: '',
 		color: '',
 	});
+
 	const [isLoadImage, setIsLoadImage] = useState(false);
 	const { products } = useSelector((state) => state.productReducer);
 	console.log('Product list ne', products);
@@ -145,6 +149,7 @@ const AddProductForm = ({ token }) => {
 			console.log('response', res);
 			// updateProductsRedux(dispatch, [...products, newData]);
 			await _handleGetAllProduct();
+			history.replace('/product/product-list');
 			MySpinner.hide(() => {}, {
 				label: 'Add product successful !',
 				value: 0,

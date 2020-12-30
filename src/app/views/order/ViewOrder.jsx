@@ -74,6 +74,55 @@ const ViewOrder = ({ location }) => {
 			console.log('Get Product list err', err);
 		}
 	};
+// 	{
+// 	  //"documentTitle": "RECEIPT", //Defaults to INVOICE
+//     "currency": "USD",
+//     "taxNotation": "vat", //or gst
+//     "marginTop": 25,
+//     "marginRight": 25,
+//     "marginLeft": 25,
+//     "marginBottom": 25,
+//     "logo": "https://www.easyinvoice.cloud/img/logo.png", //or base64
+//     //"logoExtension": "png", //only when logo is base64
+//     "sender": {
+//       "company": "ABC",
+//       "address": "DEF",
+//       "zip": "1234 AB",
+//       "city": "Sampletown",
+//       "country": "Samplecountry"
+//       //"custom1": "custom value 1",
+//       //"custom2": "custom value 2",
+//       //"custom3": "custom value 3"
+//     },
+//     "client": {
+//       "company": "Client Corp",
+//       "address": "Clientstreet 456",
+//       "zip": "4567 CD",
+//       "city": "Clientcity",
+//       "country": "Clientcountry"
+//       //"custom1": "custom value 1",
+//       //"custom2": "custom value 2",
+//       //"custom3": "custom value 3"
+//     },
+//     "invoiceNumber": "2020.0001",
+//     "invoiceDate": "05-01-2020",
+//     "products": [{
+//         "quantity": "2",
+//         "description": "Test1",
+//         "tax": 6,
+//         "price": 33.87
+//       },
+//       {
+//         "quantity": "4",
+//         "description": "Test2",
+//         "tax": 21,
+//         "price": 10.45
+//       }
+//     ],
+//     "bottomNotice": "Kindly pay your invoice within 15 days."
+//   };
+
+
 	const convertOrderData = (data) => {
 		const {
 			date,
@@ -87,25 +136,34 @@ const ViewOrder = ({ location }) => {
 			status,
 			username,
 			user_id,
+			discount,
 		} = data;
 		const newArr = [...details].map((v) => ({
-			product_id: v?.product?.id,
+			productId: v?.product?.id,
 			quantity: v?.quantity,
 		}));
 		const total = [...details].reduce(
 			(x, y) => (x += y?.quantity * y?.product?.price),
 			0
 		);
+		// CustomerId: id,
+		// 	ShippingAddress: address,
+		// 	Note: note,
+		// 	StatusId: 1,
+		// 	Total: total,
+		// 	OrderDetails: cartDetails,
+		// 	PaymentMethod: payment.method,
+		// 	Discount:
+		// 		voucher && voucher.discountPercent ? voucher.discountPercent : 0,
 		return {
-			user_id,
-			shipping_address,
-			method: payment_method,
-			buying_date: date,
-			note,
-			status,
-			total,
-			details: newArr,
-			discount: 0,
+			CustomerId: user_id,
+			ShippingAddress: shipping_address,
+			PaymentMethod: payment_method,
+			Note: note,
+			StatusId: status,
+			Total: total,
+			OrderDetails: newArr,
+			Discount: discount,
 		};
 	};
 	const _handleSubmit = async (data) => {

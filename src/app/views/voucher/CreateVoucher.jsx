@@ -38,7 +38,8 @@ import { useHistory } from 'react-router-dom';
 const CreateVoucher = ({ location }) => {
 	const dispatch = useDispatch();
 	const [mode, setMode] = useState(true);
-	const { token, vouchers } = useSelector((state) => state.user);
+	const data = useSelector((state) => state.user);
+	console.log('token ne', data);
 	const history = useHistory();
 
 	const [state, setState] = useState({
@@ -54,9 +55,16 @@ const CreateVoucher = ({ location }) => {
 	};
 	console.log('state ne', state);
 	const _handleSubmit = () => {
-		const sendData = { ...state };
+		const sendData = {
+			Code: state.voucher,
+			StartDate: state.start,
+			EndDate: state.end,
+			Name: state.name,
+			DiscountPercent: state.discount_percent,
+		};
 		console.log('SendData ne', sendData);
-		dispatch(createNewVoucher(JSON.stringify(sendData)));
+		dispatch(createNewVoucher(JSON.stringify(sendData), data.token));
+		
 		history.push('/voucher/voucher-list');
 	};
 

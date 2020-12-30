@@ -55,9 +55,9 @@ const VoucherList = ({ location }) => {
 	}, [listVoucherRedux]);
 	const initialData = () => {
 		console.log('init vooucher data ne');
-		dispatch(getAllVoucherSync());
+		dispatch(getAllVoucherSync(token));
 	};
-	console.log('data ne', data, vouchers);
+	// console.log('data ne', data, vouchers);
 	const [updateItem, setUpdateItem] = useState(data?.[0] ? data?.[0] : null);
 	const [state, setState] = useState(data?.[0] ? data?.[0] : null);
 	const handleChange = (event) => {
@@ -65,16 +65,17 @@ const VoucherList = ({ location }) => {
 		setState({ ...state, [event.target.name]: event.target.value });
 	};
 	console.log('state ne', state);
-	const _handleDeleteClick = (id) => dispatch(deleteVoucher(id));
+	const _handleDeleteClick = (id) => dispatch(deleteVoucher(id, token));
 	const _handleSubmit = () => {
 		const sendData = {
-			discount_percent: state.discount_percent,
-			start: state.start,
-			end: state.end,
-			name: state.name,
-			voucher: state?.voucher.toUpperCase(),
+			DiscountPercent: state.discount_percent,
+			StartDate: state.start,
+			EndDate: state.end,
+			Name: state.name,
+			Code: state?.voucher.toUpperCase(),
+			Id: state.id,
 		};
-		dispatch(updateVoucherInfo(state.id, JSON.stringify(sendData)));
+		dispatch(updateVoucherInfo(state.id, JSON.stringify(sendData), token));
 		setMode(!mode);
 	};
 	return (

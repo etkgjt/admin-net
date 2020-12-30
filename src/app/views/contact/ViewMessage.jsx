@@ -78,6 +78,10 @@ const ViewMessage = ({ location }) => {
 				.then((res) => res?.data);
 			const rep = await reply(token, state?.id);
 			console.log('send email success', res, rep, data);
+
+			const temp = await getAllContactMessage(token);
+			updateContactMessageToRedux(dispatch, temp);
+
 			MySpinner.hide(() => {}, { label: 'Reply Success !', value: 0 });
 			history.goBack();
 		} catch (err) {

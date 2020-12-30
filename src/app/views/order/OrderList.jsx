@@ -43,7 +43,7 @@ const OrderList = ({ location }) => {
 		try {
 			console.log('Fetch Data ne');
 			const data = await getOrderList(token);
-			data.reverse();
+			// data.reverse();
 			console.log('Data ne', data);
 			setData(data);
 			updateOrdersRedux(dispatch, data);

@@ -213,7 +213,7 @@ const SimpleTable = ({ type, data = [] }) => {
 						  ))
 						: type === 'contact'
 						? data?.map((v, i) => (
-								<TableRow key={`${v?.email}-${v?.phone}`}>
+								<TableRow key={`${v?.email}-${v?.phone}-${v.date}`}>
 									<TableCell className="px-0" size="small">
 										{`#${i}`}
 									</TableCell>
@@ -326,8 +326,8 @@ const SimpleTable = ({ type, data = [] }) => {
 										</div>
 									</TableCell>
 									<TableCell className="px-0 capitalize">
-										{item?.payment_method
-											? item?.payment_method
+										{item?.paymentMethod
+											? item?.paymentMethod
 											: 'None'}
 									</TableCell>
 									<TableCell className="px-0 capitalize">
@@ -360,14 +360,15 @@ const GroupButton = ({ token, orderId, onChangeStatusSuccessFunc, index }) => {
 	const _handleChangeOrderStatus = async (status) => {
 		try {
 			MySpinner.show();
-			const res = await updateOrderStatus(
-				token,
-				JSON.stringify({ status_id: status }),
-				orderId
-			);
+
+			const formData = new FormData();
+			formData.append('StatusId', status);
+
+			const res = await updateOrderStatus(token, formData, orderId);
+			console.log('change status res', res);
 			const newStatus = {
 				id: status,
-				value: status === 3 ? 'Đã giao' : 'Đã huỷ',
+				value: status === 3 ? 'Thành công' : 'Đã huỷ',
 			};
 			onChangeStatusSuccessFunc(index, newStatus);
 			const { sales, customers, circle, product } = await getAllStatistic(

@@ -42,6 +42,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import axios from 'axios';
 import MyAlert from 'matx/components/MyAlert';
+import { useHistory } from 'react-router-dom';
 
 const CATEGORY = {
 	smartphone: 1,
@@ -86,6 +87,9 @@ const BRAND_LIST = [
 	'MSI',
 ];
 const UpdateProductForm = ({ productInfo, token }) => {
+	const dispatch = useDispatch();
+	const history = useHistory();
+
 	const oldImages = productInfo?.images?.map((v) => v.url);
 	const [state, setState] = useState({
 		name: productInfo?.name || '',
@@ -109,7 +113,7 @@ const UpdateProductForm = ({ productInfo, token }) => {
 	const [isLoadImage, setIsLoadImage] = useState(false);
 
 	const { products } = useSelector((state) => state.productReducer);
-	const dispatch = useDispatch();
+
 	useEffect(() => {
 		ValidatorForm.addValidationRule('isPasswordMatch', (value) => {
 			if (value !== state.password) {
@@ -150,6 +154,7 @@ const UpdateProductForm = ({ productInfo, token }) => {
 			if (productInfo?.id) {
 				const res = await updateProduct(token, productInfo?.id, sendData);
 				await _handleGetAllProduct();
+				history.replace('/product/product-list');
 				// const newProductList = [
 				// 	...products.filter((v) => v.id !== productInfo.id),
 				// 	newData,

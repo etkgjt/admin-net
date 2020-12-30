@@ -49,10 +49,18 @@ export function logoutUser() {
 		});
 	};
 }
-export const createNewVoucher = (voucher) => async (dispatch) => {
+export const createNewVoucher = (voucher, token) => async (dispatch) => {
 	try {
-		const res = await API.post('/voucher', voucher);
-		const { data } = await API.get('/voucher');
+		console.log('token ne', token);
+		console.log('create voucher', voucher);
+		const res = await API.post('/vouchers', voucher, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+				'Content-Type': 'application/json',
+			},
+		});
+
+		const { data } = await API.get('/vouchers');
 		dispatch(updateVoucherListActionCreator(data));
 	} catch (err) {
 		console.log('create voucher err', err);
@@ -60,9 +68,15 @@ export const createNewVoucher = (voucher) => async (dispatch) => {
 	}
 };
 
-export const getAllVoucherSync = () => async (dispatch) => {
+export const getAllVoucherSync = (token) => async (dispatch) => {
 	try {
-		const { data } = await API.get('/vouchers');
+		console.log('token ne', token);
+		const { data } = await API.get('/vouchers', {
+			headers: {
+				Authorization: `Bearer ${token}`,
+				'Content-Type': 'application/json',
+			},
+		});
 		console.log('voucher ne', data);
 		dispatch(
 			updateVoucherListActionCreator(
@@ -80,23 +94,64 @@ export const getAllVoucherSync = () => async (dispatch) => {
 		dispatch(updateVoucherListActionCreator([]));
 	}
 };
-export const updateVoucherInfo = (id, info) => async (dispatch) => {
+export const updateVoucherInfo = (id, info, token) => async (dispatch) => {
 	try {
-		const res = await API.put(`/voucher/${id}`, info);
+		console.log('token ne', token);
+		const res = await API.put(`/vouchers`, info, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		});
 		console.log('change info success', res.data);
-		const { data } = await API.get('/voucher');
-		dispatch(updateVoucherListActionCreator(data));
+		const { data } = await API.get('/vouchers', {
+			headers: {
+				Authorization: `Bearer ${token}`,
+				'Content-Type': 'application/json',
+			},
+		});
+		dispatch(
+			updateVoucherListActionCreator(
+				data.map((v) => ({
+					...v,
+					start: v.startDate,
+					end: v.endDate,
+					voucher: v.code,
+					discount_percent: v.discountPercent,
+				}))
+			)
+		);
 	} catch (err) {
 		console.log('update voucehr info err', err);
 		dispatch(updateVoucherListActionCreator([]));
 	}
 };
-export const deleteVoucher = (id) => async (dispatch) => {
+export const deleteVoucher = (id, token) => async (dispatch) => {
 	try {
-		await API.delete(`/voucher/${id}`);
-		const { data } = await API.get('/voucher');
-		dispatch(updateVoucherListActionCreator(data));
-		console.log('list voucher sau khi delete', data);
+		console.log('token ne', token);
+		await API.delete(`/vouchers/${id}`, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+				'Content-Type': 'application/json',
+			},
+		});
+		const { data } = await API.get('/vouchers', {
+			headers: {
+				Authorization: `Bearer ${token}`,
+				'Content-Type': 'application/json',
+			},
+		});
+		dispatch(
+			updateVoucherListActionCreator(
+				data.map((v) => ({
+					...v,
+					start: v.startDate,
+					end: v.endDate,
+					voucher: v.code,
+					discount_percent: v.discountPercent,
+				}))
+			)
+		);
+		// console.log('list voucher sau khi delete', data);
 	} catch (err) {
 		console.log('Delete voucher error', err);
 		dispatch(updateVoucherListActionCreator([]));

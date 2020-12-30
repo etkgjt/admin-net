@@ -40,13 +40,14 @@ export const getOrderList = (token) =>
 	});
 export const updateOrder = (token, orderId, orderInfo) =>
 	new Promise((resolve, reject) => {
-		API.put(`/order/${orderId}`, orderInfo, {
+		API.put(`/orders/${orderId}`, orderInfo, {
 			headers: {
-				Authorization: token,
+				Authorization: `Bearer ${token}`,
+				'Content-Type': 'application/json',
 			},
 		})
 			.then((res) => resolve(res?.data))
-			.catch((err) => reject(err?.response?.data));
+			.catch((err) => reject(err));
 	});
 export const updateOrdersRedux = (dispatch, orders) => {
 	dispatch({
@@ -56,11 +57,11 @@ export const updateOrdersRedux = (dispatch, orders) => {
 };
 export const updateOrderStatus = (token, status, orderId) =>
 	new Promise((resolve, reject) => {
-		API.put(`/order/status/${orderId}`, status, {
+		API.put(`/orders/status/${orderId}`, status, {
 			headers: {
-				Authorization: token,
+				Authorization: `Bearer ${token}`,
 			},
 		})
 			.then((res) => resolve(res))
-			.catch((err) => reject(err?.response?.data));
+			.catch((err) => reject(err));
 	});
