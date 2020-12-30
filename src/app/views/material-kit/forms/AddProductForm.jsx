@@ -193,34 +193,36 @@ const AddProductForm = ({ token }) => {
 			memory,
 		} = state;
 		return {
-			name,
-			price: price * 1,
-			brand_id: brand * 1 + 1,
-			category_id: CATEGORY[category] * 1,
-			date: date.toString(),
-			quantity: quantity * 1,
+			Name: name,
+			Price: price * 1,
+			BrandId: brand * 1 + 1,
+			CategoryId: CATEGORY[category] * 1,
+			Stock: quantity * 1,
 			images: image,
 			description: {
-				cpu,
-				ram,
-				color,
-				screen_size,
-				battery,
-				os,
-				memory,
-				introduction,
+				Cpu: cpu,
+				Ram: ram,
+				Color: color,
+				ScreenSize: screen_size,
+				Battery: battery,
+				Os: os,
+				Memory: memory,
+				Introduction: introduction,
 			},
 		};
 	};
 	const onDrop = async (picture) => {
 		setIsLoadImage(true);
 		let formData = new FormData();
+		console.log('picture list', picture);
 		if (picture && picture.length) {
 			for (let i = 0; i < picture.length; i++) {
-				formData.append('file', picture[i]);
+				formData.append('files', picture[i]);
+				console.log('form data list ne', formData);
 			}
+			console.log('form data list ne', formData);
 		} else {
-			formData.append('file', picture);
+			formData.append('files', picture);
 		}
 		console.log('image ne', picture);
 		// setState({
@@ -229,7 +231,7 @@ const AddProductForm = ({ token }) => {
 		// 	// tempImg: '',
 		// });
 		const { data } = await axios.post(
-			'https://javaapiweb.herokuapp.com/upload/uploadFile',
+			'https://minhlnd.azurewebsites.net/images',
 			formData
 		);
 		console.log('Image list ne', data);

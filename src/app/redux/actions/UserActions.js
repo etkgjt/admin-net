@@ -62,9 +62,19 @@ export const createNewVoucher = (voucher) => async (dispatch) => {
 
 export const getAllVoucherSync = () => async (dispatch) => {
 	try {
-		const { data } = await API.get('/voucher');
+		const { data } = await API.get('/vouchers');
 		console.log('voucher ne', data);
-		dispatch(updateVoucherListActionCreator(data));
+		dispatch(
+			updateVoucherListActionCreator(
+				data.map((v) => ({
+					...v,
+					start: v.startDate,
+					end: v.endDate,
+					voucher: v.code,
+					discount_percent: v.discountPercent,
+				}))
+			)
+		);
 	} catch (err) {
 		console.log('get all voucher list err', err);
 		dispatch(updateVoucherListActionCreator([]));

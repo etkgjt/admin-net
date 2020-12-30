@@ -11,6 +11,7 @@ import socket from '../socket/index';
 const CustomerList = () => {
 	const [state, setState] = useState([]);
 	const data = useSelector((state) => state.user);
+	console.log('admin ne', data);
 
 	socket.on('new-user-noti', () => _handleGetAllUser(data?.token));
 

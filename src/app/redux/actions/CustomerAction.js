@@ -14,13 +14,24 @@ export const addNewCustomer = (userInfo) =>
 	});
 export const getAllCustomer = (token) =>
 	new Promise((resolve, reject) => {
-		API.get('/user/all', {
+		API.get('/customers/all', {
 			headers: {
 				'Content-Type': 'application/json',
-				Authorization: token,
+				Authorization: `Bearer ${token}`,
 			},
 		})
-			.then((res) => resolve(res?.data))
+			.then((res) =>
+				resolve(
+					res?.data.map((v) => ({
+						...v,
+						first_name: v.firstname,
+						last_name: v.lastname,
+						username: v.email,
+						phone_number: v.phone,
+						id: v.id,
+					}))
+				)
+			)
 			.catch((err) => reject(err));
 	});
 // export const deleteCustomer = (token,customer_id) => new Promise((resolve,reject)=>{

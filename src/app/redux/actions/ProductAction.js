@@ -4,15 +4,32 @@ import { REDUX } from '../type';
 
 export const getAllProducts = () =>
 	new Promise((resolve, reject) => {
-		API.get('/product')
-			.then((res) => resolve(res?.data))
+		API.get('/products')
+			.then((res) =>
+				resolve(
+					res?.data.map((v) => ({
+						...v,
+						brand: v.brandId,
+						buying_times: v.buyingTimes,
+						date_arrive: v.dateArrive,
+						description: {
+							...v.descriptions?.[0],
+							screen_size: v.descriptions[0]?.screenSize
+								? v.descriptions[0]?.screenSize
+								: 0,
+						},
+						category: v.categoryId,
+					}))
+				)
+			)
 			.catch((err) => reject(err));
 	});
 export const addNewProduct = (product, token) =>
 	new Promise((resolve, reject) => {
-		API.post('/product/add', product, {
+		API.post('/products', product, {
 			headers: {
-				Authorization: token,
+				Authorization: `Bearer ${token}`,
+				'Content-Type': 'application/json',
 			},
 		})
 			.then((res) => {
@@ -26,7 +43,7 @@ export const deleteProduct = (token, product_id) =>
 	new Promise((resolve, reject) => {
 		API.delete(`/product/delete/${product_id}`, {
 			headers: {
-				Authorization: token,
+				Authorization: `Bearer ${token}`,
 			},
 		})
 			.then((res) => resolve(res?.data))
@@ -43,9 +60,9 @@ export const updateProduct = (token, product_id, product_info) =>
 			token
 		);
 		console.log(`/product/${product_id}`);
-		API.put(`/product/${product_id}`, product_info, {
+		API.put(`/products/${product_id}`, product_info, {
 			headers: {
-				Authorization: token,
+				Authorization: `Bearer ${token}`,
 			},
 		})
 			.then((res) => resolve(res?.data))

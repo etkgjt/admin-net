@@ -1,8 +1,8 @@
 import moment from 'moment';
 import axios from 'axios';
-export const BASE_URL = 'https://javaapiweb.herokuapp.com';
+export const BASE_URL = 'https://minhlnd.azurewebsites.net';
 export const STATUS = ['Đang xử lý', 'Đang giao', 'Thành công', 'Đã huỷ'];
-export function nonAccentVietnamese(str) {
+export function nonAccentVietnamese(str = '') {
 	str = str.toLowerCase();
 	//     We can also use this instead of from line 11 to line 17
 	//     str = str.replace(/\u00E0|\u00E1|\u1EA1|\u1EA3|\u00E3|\u00E2|\u1EA7|\u1EA5|\u1EAD|\u1EA9|\u1EAB|\u0103|\u1EB1|\u1EAF|\u1EB7|\u1EB3|\u1EB5/g, "a");

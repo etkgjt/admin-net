@@ -3,12 +3,39 @@ import { REDUX } from '../type';
 
 export const getOrderList = (token) =>
 	new Promise((resolve, reject) => {
-		API.get('/order', {
+		API.get('/orders', {
 			headers: {
-				Authorization: token,
+				Authorization: `Bearer ${token}`,
 			},
 		})
-			.then((res) => resolve(res?.data))
+			.then((res) =>
+				resolve(
+					res?.data.map((v) => ({
+						...v,
+						shipping_address: v.shippingAddress,
+						payment_method:
+							v.paymentMethod?.toLowerCase() == 'delivery'
+								? 2
+								: v.paymentMethod?.toLowerCase() == 'paypal'
+								? 1
+								: 0,
+						customer: {
+							...v.customer,
+							username: v.customer.email,
+							first_name: v.customer.firstname,
+							last_name: v.customer.lastname,
+							phone_number: v.customer.phone,
+						},
+						details: [
+							...v.orderDetails.map((k) => ({
+								product: { ...k.product },
+								quantity: k.quantity,
+								current_price: k.currentPrice,
+							})),
+						],
+					}))
+				)
+			)
 			.catch((err) => reject(err?.response?.data));
 	});
 export const updateOrder = (token, orderId, orderInfo) =>

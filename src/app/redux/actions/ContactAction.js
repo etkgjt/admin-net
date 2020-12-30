@@ -2,12 +2,14 @@ import { API } from 'utils';
 import { REDUX } from '../type';
 export const getAllContactMessage = (token) =>
 	new Promise((resolve, reject) => {
-		API.get('/contact', {
+		API.get('/contacts', {
 			headers: {
 				Authorization: token,
 			},
 		})
-			.then((res) => resolve(res?.data))
+			.then((res) =>
+				resolve(res?.data.map((v) => ({ ...v, reply: v.isReply })))
+			)
 			.catch((err) => reject(err));
 	});
 export const reply = (token, messageId) =>

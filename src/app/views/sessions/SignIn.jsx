@@ -38,7 +38,7 @@ class SignIn extends Component {
 	}
 	state = {
 		email: 'admin@gmail.com',
-		password: '123456',
+		password: 'admin',
 		agreement: '',
 		spinnerOpen: false,
 	};

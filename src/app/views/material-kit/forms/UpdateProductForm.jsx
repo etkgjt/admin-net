@@ -33,6 +33,7 @@ import { IconButton } from '@material-ui/core';
 import Color from '../../utilities/Color';
 import {
 	addNewProduct,
+	getAllProducts,
 	updateProduct,
 	updateProductsRedux,
 } from 'app/redux/actions/ProductAction';
@@ -40,6 +41,7 @@ import MySpinner from 'matx/components/MySpinner';
 import { useSelector, useDispatch } from 'react-redux';
 
 import axios from 'axios';
+import MyAlert from 'matx/components/MyAlert';
 
 const CATEGORY = {
 	smartphone: 1,
@@ -117,6 +119,16 @@ const UpdateProductForm = ({ productInfo, token }) => {
 		});
 		return ValidatorForm.removeValidationRule('isPasswordMatch');
 	}, []);
+	const _handleGetAllProduct = async () => {
+		try {
+			const data = await getAllProducts();
+			console.log('all products list', data);
+			updateProductsRedux(dispatch, data);
+		} catch (err) {
+			MyAlert.show('Lỗi', `${err.message}`, false);
+			console.log('Get All product list err', err);
+		}
+	};
 
 	// componentWillUnmount() {
 	// 	// remove rule when it is not needed
@@ -137,11 +149,12 @@ const UpdateProductForm = ({ productInfo, token }) => {
 			console.log(sendData);
 			if (productInfo?.id) {
 				const res = await updateProduct(token, productInfo?.id, sendData);
-				const newProductList = [
-					...products.filter((v) => v.id !== productInfo.id),
-					newData,
-				];
-				updateProductsRedux(dispatch, newProductList);
+				await _handleGetAllProduct();
+				// const newProductList = [
+				// 	...products.filter((v) => v.id !== productInfo.id),
+				// 	newData,
+				// ];
+				// updateProductsRedux(dispatch, newProductList);
 				console.log('response', res);
 			} else throw new Error('Cannot get Product Id to update');
 			MySpinner.hide(() => {}, {
@@ -199,22 +212,21 @@ const UpdateProductForm = ({ productInfo, token }) => {
 		} = state;
 		const newImgs = image;
 		return {
-			name,
-			price: price * 1,
-			brand_id: brand * 1,
-			category_id: CATEGORY[category] * 1,
-			date: date.toString(),
-			quantity: quantity * 1,
-			images: newImgs,
+			Name: name,
+			Price: price * 1,
+			BrandId: brand * 1 + 1,
+			CategoryId: CATEGORY[category] * 1,
+			Stock: quantity * 1,
+			images: image,
 			description: {
-				cpu,
-				ram,
-				color,
-				screen_size,
-				battery,
-				os,
-				memory,
-				introduction: introduction + '',
+				Cpu: cpu,
+				Ram: ram,
+				Color: color,
+				ScreenSize: screen_size,
+				Battery: battery,
+				Os: os,
+				Memory: memory,
+				Introduction: introduction,
 			},
 		};
 	};
@@ -223,10 +235,10 @@ const UpdateProductForm = ({ productInfo, token }) => {
 		let formData = new FormData();
 		if (picture && picture.length) {
 			for (let i = 0; i < picture.length; i++) {
-				formData.append('file', picture[i]);
+				formData.append('files', picture[i]);
 			}
 		} else {
-			formData.append('file', picture);
+			formData.append('files', picture);
 		}
 		console.log('image ne', picture);
 		// setState({
@@ -235,7 +247,7 @@ const UpdateProductForm = ({ productInfo, token }) => {
 		// 	// tempImg: '',
 		// });
 		const { data } = await axios.post(
-			'https://javaapiweb.herokuapp.com/upload/uploadFile',
+			'https://minhlnd.azurewebsites.net/images',
 			formData
 		);
 		console.log('Image list ne', data);
@@ -350,7 +362,7 @@ const UpdateProductForm = ({ productInfo, token }) => {
 										className="mb-16 w-100"
 										label="Ram"
 										onChange={handleChange}
-										type="number"
+										type="text"
 										name="ram"
 										value={ram}
 										validators={['required']}
@@ -372,7 +384,7 @@ const UpdateProductForm = ({ productInfo, token }) => {
 										className="mb-16 w-100"
 										label="Screen Size"
 										onChange={handleChange}
-										type="number"
+										type="text"
 										name="screen_size"
 										value={screen_size}
 										validators={['required']}
@@ -383,7 +395,7 @@ const UpdateProductForm = ({ productInfo, token }) => {
 										className="mb-16 w-100"
 										label="Battery (mAh)"
 										onChange={handleChange}
-										type="number"
+										type="text"
 										name="battery"
 										value={battery}
 										validators={['required']}
@@ -394,7 +406,7 @@ const UpdateProductForm = ({ productInfo, token }) => {
 										className="mb-16 w-100"
 										label="Memory (GB)"
 										onChange={handleChange}
-										type="number"
+										type="text"
 										name="memory"
 										value={memory}
 										validators={['required']}

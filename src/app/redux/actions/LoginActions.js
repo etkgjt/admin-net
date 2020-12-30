@@ -33,22 +33,42 @@ export function loginWithEmailAndPassword({ email, password }) {
 				type: LOGIN_LOADING,
 			});
 			const res = await userLogin(email, password);
-			console.log(res);
-			const userInfo = await getUserInfo(res?.access_token);
+
+			const userInfo = { ...res.user };
+			const {
+				id,
+				userName,
+				// password,
+				role,
+				firstname,
+				lastname,
+				gender,
+
+				phone,
+				address,
+				verified,
+				// roleNavigation,
+				// carts,
+				// comments,
+				// favorites,
+				// orders,
+			} = userInfo;
 			console.log('user info ne', userInfo);
-			if (userInfo && userInfo?.role && userInfo?.role?.name === 'ADMIN') {
+			if (role === 0) {
+				console.log('Login success');
 				dispatch(
 					setUserData({
-						...userInfo,
+						...userInfo.user,
 						role: 'ADMIN',
-						token: res?.access_token,
+						token: res.token,
 					})
 				);
 				console.log('Login Success');
 				dispatch({ type: LOGIN_SUCCESS });
 				history.push({ pathname: '/dashboard/analytics' });
 			} else {
-				return dispatch({
+				console.log('Login fail role ne', role);
+				dispatch({
 					type: LOGIN_ERROR,
 					payload: `You don't have permission`,
 				});
@@ -80,8 +100,8 @@ const getUserInfo = (token) =>
 	});
 const userLogin = (email, password) =>
 	new Promise((resolve, reject) => {
-		const data = JSON.stringify({ username: email, password: password });
-		API.post('/login', data, {
+		const data = JSON.stringify({ UserName: email, Password: password });
+		API.post('/login/admin', data, {
 			headers: {
 				'Content-Type': 'application/json',
 			},

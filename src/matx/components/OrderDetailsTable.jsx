@@ -108,6 +108,7 @@ const DetailsTable = ({
 		let tmpArr = [...state].filter((v, i) => i !== idx);
 		setState(tmpArr);
 	};
+	console.log('State ne', state);
 	return type === 'view' ? (
 		<Table>
 			<TableHead>
@@ -123,11 +124,11 @@ const DetailsTable = ({
 						<TableCell size="small">{i + 1}</TableCell>
 						<TableCell align="left">{v?.product?.name}</TableCell>
 						<TableCell align="right">
-							{getNumberWithDot(v?.product?.price)}
+							{getNumberWithDot(v?.current_price)}
 						</TableCell>
 						<TableCell align="right">{v?.quantity}</TableCell>
 						<TableCell align="right">
-							{getNumberWithDot(v?.product?.price * 1 * v?.quantity)} vnđ
+							{getNumberWithDot(v?.current_price * 1 * v?.quantity)} vnđ
 						</TableCell>
 					</TableRow>
 				))}
@@ -144,7 +145,7 @@ const DetailsTable = ({
 				<TableRow>
 					<TableCell>{`${getNumberWithDot(
 						state?.reduce(
-							(x, y) => (x += y?.product?.price * 1 * y?.quantity),
+							(x, y) => (x += y?.current_price * 1 * y?.quantity),
 							0
 						)
 					)} vnđ`}</TableCell>
@@ -152,17 +153,17 @@ const DetailsTable = ({
 					<TableCell>- {discount}%</TableCell>
 					<TableCell>{`${getNumberWithDot(
 						state?.reduce(
-							(x, y) => (x += y?.product?.price * 1 * y?.quantity),
+							(x, y) => (x += y?.current_price * 1 * y?.quantity),
 							0
 						) -
 							(state?.reduce(
-								(x, y) => (x += y?.product?.price * 1 * y?.quantity),
+								(x, y) => (x += y?.current_price * 1 * y?.quantity),
 								0
 							) *
 								discount) /
 								100 +
 							state?.reduce(
-								(x, y) => (x += y?.product?.price * 1 * y?.quantity),
+								(x, y) => (x += y?.current_price * 1 * y?.quantity),
 								0
 							) *
 								0.02
@@ -185,7 +186,7 @@ const DetailsTable = ({
 						<TableCell size="small">{i + 1}</TableCell>
 						<TableCell align="left">{v?.product?.name}</TableCell>
 						<TableCell align="right">
-							{getNumberWithDot(v?.product?.price)}
+							{getNumberWithDot(v?.current_price)}
 						</TableCell>
 						<TableCell align="right">
 							<TextField
@@ -196,7 +197,7 @@ const DetailsTable = ({
 							/>
 						</TableCell>
 						<TableCell align="right">
-							{getNumberWithDot(v?.product?.price * 1 * v?.quantity)} vnđ
+							{getNumberWithDot(v?.current_price * 1 * v?.quantity)} vnđ
 						</TableCell>
 						<TableCell align="right">
 							<IconButton onClick={() => _handleDelete(i)}>
@@ -218,7 +219,7 @@ const DetailsTable = ({
 				<TableRow>
 					<TableCell>{`${getNumberWithDot(
 						state?.reduce(
-							(x, y) => (x += y?.product?.price * 1 * y?.quantity),
+							(x, y) => (x += y?.current_price * 1 * y?.quantity),
 							0
 						)
 					)} vnđ`}</TableCell>
@@ -227,17 +228,17 @@ const DetailsTable = ({
 
 					<TableCell>{`${getNumberWithDot(
 						state?.reduce(
-							(x, y) => (x += y?.product?.price * 1 * y?.quantity),
+							(x, y) => (x += y?.current_price * 1 * y?.quantity),
 							0
 						) -
 							(state?.reduce(
-								(x, y) => (x += y?.product?.price * 1 * y?.quantity),
+								(x, y) => (x += y?.current_price * 1 * y?.quantity),
 								0
 							) *
 								discount) /
 								100 +
 							state?.reduce(
-								(x, y) => (x += y?.product?.price * 1 * y?.quantity),
+								(x, y) => (x += y?.current_price * 1 * y?.quantity),
 								0
 							) *
 								0.02
