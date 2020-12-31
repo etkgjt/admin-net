@@ -92,7 +92,7 @@ const ViewMessage = ({ location }) => {
 	console.log('state ne', state);
 	return (
 		<div className="m-sm-30">
-			<h6>View Message</h6>
+			<h4>View Message</h4>
 			<SimpleCard title="Message">
 				<div style={{ flexDirection: 'column', display: 'flex' }}>
 					<h6>From:</h6>

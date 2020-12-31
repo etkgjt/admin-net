@@ -209,45 +209,35 @@ const AppTable = ({ type, data }) => {
 	};
 	console.log('dataaaaa simple table ne', data);
 	return (
-		<div className="m-sm-30">
-			<div className="mb-sm-30">
-				<Breadcrumb
-					routeSegments={[
-						{ name: 'Material', path: '/material' },
-						{ name: 'Table' },
-					]}
-				/>
-			</div>
-			<SimpleCard
-				title={
-					type === 'contact'
-						? 'All Message'
-						: type === 'order'
-						? 'All Orders'
-						: type === 'product'
-						? 'All Products'
-						: 'All Customers'
-				}
-				controlGroup={type !== 'contact' ? true : false}
-				onSearch={(v) => _handleSearch(v)}
-				onCSVPress={_handleToCSV}
-				csvData={_toCSVData()}
-			>
-				{state && state.length ? (
-					<SimpleTable type={type} data={state ? state : []} />
-				) : (
-					<div
-						style={{
-							justifyContent: 'center',
-							alignItems: 'center',
-							display: 'flex',
-						}}
-					>
-						<CircularProgress size={30} />
-					</div>
-				)}
-			</SimpleCard>
-		</div>
+		<SimpleCard
+			title={
+				type === 'contact'
+					? 'All Message'
+					: type === 'order'
+					? 'All Orders'
+					: type === 'product'
+					? 'All Products'
+					: 'All Customers'
+			}
+			controlGroup={type !== 'contact' ? true : false}
+			onSearch={(v) => _handleSearch(v)}
+			onCSVPress={_handleToCSV}
+			csvData={_toCSVData()}
+		>
+			{state && state.length ? (
+				<SimpleTable type={type} data={state ? state : []} />
+			) : (
+				<div
+					style={{
+						justifyContent: 'center',
+						alignItems: 'center',
+						display: 'flex',
+					}}
+				>
+					<CircularProgress size={30} />
+				</div>
+			)}
+		</SimpleCard>
 	);
 };
 

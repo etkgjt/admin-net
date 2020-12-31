@@ -59,7 +59,7 @@ const ViewProducts = ({ location }) => {
 						]}
 					/>
 				</div> */}
-			<h6>ViewProducts</h6>
+			<h4>Product</h4>
 			{!state || !state.name ? (
 				<CircularProgress />
 			) : (

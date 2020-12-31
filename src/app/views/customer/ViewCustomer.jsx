@@ -73,7 +73,7 @@ const ViewCustomer = ({ location }) => {
 
 	return (
 		<div className="m-sm-30">
-			<h6>Edit</h6>
+			<h4>Edit</h4>
 			{!state || !state?.username ? (
 				<CircularProgress />
 			) : (

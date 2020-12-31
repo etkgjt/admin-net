@@ -27,6 +27,7 @@ import moment from 'moment';
 function NotificationBar(props) {
 	const dispatch = useDispatch();
 	const listNotiRedux = useSelector((state) => state.notification);
+	const data = useSelector((state) => state.user);
 	const reverseList = listNotiRedux;
 	useEffect(() => {
 		setNotiList(
@@ -41,7 +42,8 @@ function NotificationBar(props) {
 		)
 	);
 	useEffect(() => {
-		if (!listNotiRedux || !listNotiRedux.length) dispatch(getNotification());
+		if (!listNotiRedux || !listNotiRedux.length)
+			dispatch(getNotification(data.token));
 	}, []);
 	console.log('list noti', notification);
 	const {
@@ -51,13 +53,13 @@ function NotificationBar(props) {
 		// notification: notifcationList = [],
 	} = props;
 	socket.on('new-user-noti', () => {
-		dispatch(getNotification());
+		dispatch(getNotification(data.token));
 	});
 	socket.on('new-order-noti', () => {
-		dispatch(getNotification());
+		dispatch(getNotification(data.token));
 	});
 	socket.on('new-message-noti', () => {
-		dispatch(getNotification());
+		dispatch(getNotification(data.token));
 	});
 	const [panelOpen, setPanelOpen] = React.useState(false);
 
@@ -66,7 +68,7 @@ function NotificationBar(props) {
 		// 	dispatch(getNotification());
 		// }
 		setPanelOpen(!panelOpen);
-		if (id) dispatch(deleteNotification(id, listNotiRedux));
+		if (id) dispatch(deleteNotification(id, listNotiRedux, data.token));
 	}
 	const parentThemePalette = theme.palette;
 	// console.log(theme);
@@ -113,7 +115,7 @@ function NotificationBar(props) {
 								size="small"
 								className="delete-button bg-light-gray mr-24"
 								onClick={() =>
-									dispatch(deleteNotification(v.id, listNotiRedux))
+									dispatch(deleteNotification(v.id, listNotiRedux,data.token))
 								}
 							>
 								<Icon className="text-muted" fontSize="small">
@@ -156,7 +158,9 @@ function NotificationBar(props) {
 					<div className="text-center">
 						<Button
 							onClick={() =>
-								dispatch(deleteAllNotification(listNotiRedux))
+								dispatch(
+									deleteAllNotification(listNotiRedux, data.token)
+								)
 							}
 						>
 							Clear Notifications

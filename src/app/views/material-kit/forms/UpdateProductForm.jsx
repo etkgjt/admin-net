@@ -281,8 +281,6 @@ const UpdateProductForm = ({ productInfo, token }) => {
 	return (
 		<div>
 			<SimpleCard>
-				<h3>Product</h3>
-
 				<ValidatorForm onSubmit={handleSubmit} onError={(errors) => null}>
 					<Grid container spacing={6}>
 						<Grid item lg={6} md={6} sm={12} xs={12}>

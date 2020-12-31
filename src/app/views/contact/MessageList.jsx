@@ -57,7 +57,7 @@ const MessageList = ({ location }) => {
 					/>
 				</div> */}
 
-			<h4>OrderList</h4>
+			<h4>Messages</h4>
 			<AppTable type="contact" data={data} />
 		</div>
 	);

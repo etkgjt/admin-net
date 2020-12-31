@@ -51,6 +51,7 @@ const CustomerList = () => {
 				]}
 			/>
 		</div> */}
+		<h4>Customer List</h4>
 			<AppTable type="customer" data={customers} />
 		</div>
 	);

@@ -89,7 +89,7 @@ const SimpleTable = ({ type, data = [] }) => {
 		updateOrdersRedux(dispatch, newOrderList);
 	};
 	return (
-		<div className="w-100 overflow-auto">
+		<div className="w-100 overflow-auto p-0">
 			<Table style={{ whiteSpace: 'pre' }}>
 				<TableHead>
 					<TableRow>

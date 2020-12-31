@@ -54,8 +54,8 @@ const ProductList = React.memo(() => {
 						]}
 					/>
 				</div> */}
-			<h4>ProductList</h4>
-			<AppTable type="product" data={data} />
+			<h4>Product List</h4>
+		<AppTable type="product" data={data} />
 		</div>
 	);
 });

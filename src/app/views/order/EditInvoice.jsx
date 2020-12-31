@@ -77,8 +77,8 @@ const EditInvoice = ({
 	};
 
 	return (
-		<div>
-			<h3>Edit Invoice</h3>
+		<div className="p-0">
+			<h4>Edit Invoice</h4>
 			<ValidatorForm onSubmit={_handleSubmit}>
 				<Grid
 					style={{

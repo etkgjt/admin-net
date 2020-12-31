@@ -63,7 +63,7 @@ const OrderList = ({ location }) => {
 						]}
 					/>
 				</div> */}
-			<h4>OrderList</h4>
+			<h4>Order List</h4>
 
 			<AppTable type="order" data={data} />
 		</div>

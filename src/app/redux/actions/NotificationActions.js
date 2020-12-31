@@ -65,9 +65,13 @@ export const generateNotiObject = (
 	}
 };
 
-export const getNotification = () => async (dispatch) => {
+export const getNotification = (token) => async (dispatch) => {
 	try {
-		const { data } = await API.get('/noti');
+		const { data } = await API.get('/notifications', {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		});
 		console.log('List noti chua parse', data);
 		let temp = [...data].sort(
 			(a, b) => moment(b.date).valueOf() - moment(a.date).valueOf()
@@ -81,9 +85,13 @@ export const getNotification = () => async (dispatch) => {
 	}
 };
 
-export const deleteNotification = (id, arr = []) => async (dispatch) => {
+export const deleteNotification = (id, arr = [], token) => async (dispatch) => {
 	try {
-		await API.delete(`/noti/clear?id=${id}`);
+		await API.delete(`/notifications/${id}`, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		});
 		dispatch({
 			type: DELETE_NOTIFICATION,
 			payload: arr.filter((v) => v?.id !== id),
@@ -96,9 +104,13 @@ export const deleteNotification = (id, arr = []) => async (dispatch) => {
 	}
 };
 
-export const deleteAllNotification = (arr) => async (dispatch) => {
+export const deleteAllNotification = (arr, token) => async (dispatch) => {
 	try {
-		const res = await API.delete('/noti/clear');
+		const res = await API.delete('/notifications', {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		});
 		console.log('delete all noti success', res);
 		dispatch({
 			type: DELETE_ALL_NOTIFICATION,

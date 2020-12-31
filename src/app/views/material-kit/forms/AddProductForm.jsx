@@ -265,9 +265,8 @@ const AddProductForm = ({ token }) => {
 
 	return (
 		<div>
+			<h4>New Product</h4>
 			<SimpleCard>
-				<h3>NewProduct</h3>
-
 				<ValidatorForm
 					// ref="form"
 					onSubmit={handleSubmit}

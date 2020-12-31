@@ -64,14 +64,14 @@ const CreateVoucher = ({ location }) => {
 		};
 		console.log('SendData ne', sendData);
 		dispatch(createNewVoucher(JSON.stringify(sendData), data.token));
-		
+
 		history.push('/voucher/voucher-list');
 	};
 
 	return (
 		<div className="m-sm-30">
 			<h4>Create Voucher</h4>
-			<SimpleCard title="All Voucher" controlGroup={false}>
+			<SimpleCard title="Add New Voucher" controlGroup={false}>
 				<ValidatorForm onSubmit={() => _handleSubmit()}>
 					<Button color="primary" variant="contained" type="submit">
 						<Icon>add</Icon>
