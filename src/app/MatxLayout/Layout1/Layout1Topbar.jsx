@@ -85,7 +85,7 @@ class Layout1Topbar extends Component {
 								</IconButton>
 
 								<div className="hide-on-mobile">
-									<IconButton>
+									{/* <IconButton>
 										<Icon style={{ color: 'white' }}>
 											mail_outline
 										</Icon>
@@ -99,7 +99,7 @@ class Layout1Topbar extends Component {
 										<Icon style={{ color: 'white' }}>
 											star_outline
 										</Icon>
-									</IconButton>
+									</IconButton> */}
 								</div>
 							</div>
 							<div className="flex flex-middle">

@@ -74,54 +74,53 @@ const ViewOrder = ({ location }) => {
 			console.log('Get Product list err', err);
 		}
 	};
-// 	{
-// 	  //"documentTitle": "RECEIPT", //Defaults to INVOICE
-//     "currency": "USD",
-//     "taxNotation": "vat", //or gst
-//     "marginTop": 25,
-//     "marginRight": 25,
-//     "marginLeft": 25,
-//     "marginBottom": 25,
-//     "logo": "https://www.easyinvoice.cloud/img/logo.png", //or base64
-//     //"logoExtension": "png", //only when logo is base64
-//     "sender": {
-//       "company": "ABC",
-//       "address": "DEF",
-//       "zip": "1234 AB",
-//       "city": "Sampletown",
-//       "country": "Samplecountry"
-//       //"custom1": "custom value 1",
-//       //"custom2": "custom value 2",
-//       //"custom3": "custom value 3"
-//     },
-//     "client": {
-//       "company": "Client Corp",
-//       "address": "Clientstreet 456",
-//       "zip": "4567 CD",
-//       "city": "Clientcity",
-//       "country": "Clientcountry"
-//       //"custom1": "custom value 1",
-//       //"custom2": "custom value 2",
-//       //"custom3": "custom value 3"
-//     },
-//     "invoiceNumber": "2020.0001",
-//     "invoiceDate": "05-01-2020",
-//     "products": [{
-//         "quantity": "2",
-//         "description": "Test1",
-//         "tax": 6,
-//         "price": 33.87
-//       },
-//       {
-//         "quantity": "4",
-//         "description": "Test2",
-//         "tax": 21,
-//         "price": 10.45
-//       }
-//     ],
-//     "bottomNotice": "Kindly pay your invoice within 15 days."
-//   };
-
+	// 	{
+	// 	  //"documentTitle": "RECEIPT", //Defaults to INVOICE
+	//     "currency": "USD",
+	//     "taxNotation": "vat", //or gst
+	//     "marginTop": 25,
+	//     "marginRight": 25,
+	//     "marginLeft": 25,
+	//     "marginBottom": 25,
+	//     "logo": "https://www.easyinvoice.cloud/img/logo.png", //or base64
+	//     //"logoExtension": "png", //only when logo is base64
+	//     "sender": {
+	//       "company": "ABC",
+	//       "address": "DEF",
+	//       "zip": "1234 AB",
+	//       "city": "Sampletown",
+	//       "country": "Samplecountry"
+	//       //"custom1": "custom value 1",
+	//       //"custom2": "custom value 2",
+	//       //"custom3": "custom value 3"
+	//     },
+	//     "client": {
+	//       "company": "Client Corp",
+	//       "address": "Clientstreet 456",
+	//       "zip": "4567 CD",
+	//       "city": "Clientcity",
+	//       "country": "Clientcountry"
+	//       //"custom1": "custom value 1",
+	//       //"custom2": "custom value 2",
+	//       //"custom3": "custom value 3"
+	//     },
+	//     "invoiceNumber": "2020.0001",
+	//     "invoiceDate": "05-01-2020",
+	//     "products": [{
+	//         "quantity": "2",
+	//         "description": "Test1",
+	//         "tax": 6,
+	//         "price": 33.87
+	//       },
+	//       {
+	//         "quantity": "4",
+	//         "description": "Test2",
+	//         "tax": 21,
+	//         "price": 10.45
+	//       }
+	//     ],
+	//     "bottomNotice": "Kindly pay your invoice within 15 days."
+	//   };
 
 	const convertOrderData = (data) => {
 		const {
@@ -163,7 +162,7 @@ const ViewOrder = ({ location }) => {
 			StatusId: status,
 			Total: total,
 			OrderDetails: newArr,
-			Discount: discount,
+			Discount: discount ? discount : 0,
 		};
 	};
 	const _handleSubmit = async (data) => {
@@ -182,7 +181,7 @@ const ViewOrder = ({ location }) => {
 
 			const newState = {
 				id: state?.id,
-				discount: data?.discount,
+				discount: data?.discount ? data?.discount : 0,
 				total: [...data?.details].reduce(
 					(x, y) => (x += y?.quantity * y?.product?.price),
 					0

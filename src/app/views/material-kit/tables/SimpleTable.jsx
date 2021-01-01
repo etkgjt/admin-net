@@ -203,11 +203,11 @@ const SimpleTable = ({ type, data = [] }) => {
 										>
 											<Icon>create</Icon>
 										</IconButton>
-										<IconButton
+										{/* <IconButton
 											onClick={() => _handleDeleteProduct(item?.id)}
 										>
 											<Icon color="error">close</Icon>
-										</IconButton>
+										</IconButton> */}
 									</TableCell>
 								</TableRow>
 						  ))
@@ -290,7 +290,7 @@ const SimpleTable = ({ type, data = [] }) => {
 								</TableRow>
 						  ))
 						: data?.map((item, i) => (
-								<TableRow key={`${item?.id}`}>
+								<TableRow key={`${item?.id}-${item?.total}`}>
 									<TableCell className="px-0 capitalize" align="left">
 										{item?.id}
 									</TableCell>
@@ -331,7 +331,13 @@ const SimpleTable = ({ type, data = [] }) => {
 											: 'None'}
 									</TableCell>
 									<TableCell className="px-0 capitalize">
-										{getNumberWithDot(item?.total)}
+										{getNumberWithDot(
+											item?.details?.reduce(
+												(x, y) =>
+													(x += y.quantity * y.current_price),
+												0
+											)
+										)}
 									</TableCell>
 									<TableCell className="px-0" align="right">
 										<GroupButton
