@@ -4,7 +4,7 @@ import { REDUX } from '../type';
 
 export const addNewCustomer = (userInfo) =>
 	new Promise((resolve, reject) => {
-		API.post('/user/add', userInfo, {
+		API.post('/customers/add', userInfo, {
 			headers: {
 				'Content-Type': 'application/json',
 			},

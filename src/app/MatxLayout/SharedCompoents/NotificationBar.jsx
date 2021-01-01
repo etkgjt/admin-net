@@ -68,7 +68,7 @@ function NotificationBar(props) {
 		// 	dispatch(getNotification());
 		// }
 		setPanelOpen(!panelOpen);
-		if (id) dispatch(deleteNotification(id, listNotiRedux, data.token));
+		//if (id) dispatch(deleteNotification(id, listNotiRedux, data.token));
 	}
 	const parentThemePalette = theme.palette;
 	// console.log(theme);
@@ -115,7 +115,13 @@ function NotificationBar(props) {
 								size="small"
 								className="delete-button bg-light-gray mr-24"
 								onClick={() =>
-									dispatch(deleteNotification(v.id, listNotiRedux,data.token))
+									dispatch(
+										deleteNotification(
+											v.id,
+											listNotiRedux,
+											data.token
+										)
+									)
 								}
 							>
 								<Icon className="text-muted" fontSize="small">

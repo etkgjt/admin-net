@@ -71,14 +71,23 @@ class AddCustomerForm extends Component {
 				address,
 			} = this.state;
 			const data = JSON.stringify({
-				username: email,
-				first_name: firstName,
-				last_name: lastName,
-				phone_number: mobile,
-				gender: gender === 'male' ? 0 : 1,
-				role: 2,
-				password,
-				address,
+				// username: email,
+				// first_name: firstName,
+				// last_name: lastName,
+				// phone_number: mobile,
+				// gender: gender === 'male' ? 0 : 1,
+				// role: 2,
+				// password,
+				// address,
+				UserName: email,
+				Email: email,
+				Firstname: firstName,
+				Lastname: lastName,
+				Address: address,
+				Phone: mobile,
+				Gender: gender === 'male' ? 0 : 1,
+				Role: 1,
+				Password: password,
 			});
 			console.log('data', data);
 			const res = await addNewCustomer(data);

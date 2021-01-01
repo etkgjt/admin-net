@@ -76,22 +76,11 @@ const Dashboard1 = (props) => {
 	const dispatch = useDispatch();
 
 	useEffect(() => {
-		if (
-			!sale ||
-			!sale.length ||
-			!product ||
-			!product.length ||
-			!customer ||
-			!customer.length ||
-			!category ||
-			!category.length
-		) {
-			initialData();
-		}
+		initialData();
 	}, []);
 
 	const [state, setState] = useState({
-		sale: sale ? sale : [],
+		sale: sale ? sale : {},
 		product: product ? product : [],
 		category: category ? category : [],
 		customer: customer ? customer : [],
@@ -122,6 +111,12 @@ const Dashboard1 = (props) => {
 				customers,
 				circle
 			);
+			setState({
+				sale: sales,
+				product,
+				customer: customers,
+				category: circle,
+			});
 		} catch (err) {
 			console.log('get statistics err', err);
 		}
