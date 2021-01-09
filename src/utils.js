@@ -1,6 +1,6 @@
 import moment from 'moment';
 import axios from 'axios';
-export const BASE_URL = 'https://minhlnd.azurewebsites.net';
+export const BASE_URL = 'https://localhost:44377';
 export const STATUS = ['Đang xử lý', 'Đang giao', 'Thành công', 'Đã huỷ'];
 export function nonAccentVietnamese(str = '') {
 	str = str.toLowerCase();
